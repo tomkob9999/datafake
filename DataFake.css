@@ -1,0 +1,114 @@
+/* @charset "UTF-8" */
+
+/* Theme Name: Faker On the web
+Author: Tomio Kobayashi
+Version: 0.9 */
+
+
+:root {
+    ---font-color-primary: #515A62;
+    ---button-color-type1: #C8E2F9;
+    ---button-border-color-type1: rgba(120, 198, 136, 0.8);
+    ---button-border-color-type2: rgba(227, 134, 143, 0.8);
+    ---font-color-table-header: #556068;
+    ---font-primary: Arial, Helvetica, sans-serif
+}
+    
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(---font-primary);
+}
+
+body {
+    background-color: #1F88E6;
+    position: relative;
+    padding: 12px 18px;
+}
+
+.frm1 {
+    background-color: #C8E2F9;
+    border-radius: 10px;
+    position: relative;
+    padding: 12px 18px;
+
+}
+
+.frmtitle {
+    position: relative;
+    left:0px;
+    top: 0px;
+    
+    /* font-family: Roboto; */
+    /* font-style: normal;
+    font-weight: normal; */
+    font-size: 20px;
+    /* line-height: 28px; */
+    /* font-weight: bold; */
+    
+    /* color: #515A62; */
+    color: black;
+}
+
+.frmlocale {
+    /* border: 1px solid greenyellow; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px;
+    
+    position: relative;
+    margin-top: 25px;
+}
+
+.txtlocale {
+
+font-size: 16px;
+line-height: 28px;
+display: flex;
+align-items: center;
+
+color: #5A5F66;
+
+margin-right: 20px;
+}
+
+.select1 {
+    width: 200px;
+}
+
+.frmcont {
+
+    min-height: 200px;
+
+    background: #FFFFFF;
+    border: 2px solid #F3F6F9;
+    box-sizing: border-box;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.flexrowend {
+    /* border: 1px solid greenyellow; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px;
+}
+
+.line1 {
+    background: #F2F2F4;
+    height: 3px;
+    margin-top: 5px;
+}
+
+.txtoutput {
+    
+    margin-top: 30px;
+    color: #5A5F66;
+    font-size: 18px;
+    line-height: 20px;
+}
