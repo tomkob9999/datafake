@@ -12,7 +12,7 @@ On desktop (Windows/Mac/Linux/whatever), download the zip and unzip.  Then, laun
 # Features
 - Dynamically add fields: CLOSED
 - Choose locale: CLOSED
-- Allow Delete line
+- Allow Delete line: CLOSED
 - Allow limited locales: OPEN
 - Alow copy of Output: OPEN
 - Allow output format JSON: OPEN
