@@ -1,5 +1,55 @@
-// const locales = [
-// ]
+const actlocales = [
+    // erase all if all locales are activated
+    {name: 'ja', title: 'Japanese'},
+    {name: 'en_US', title: 'English (United States)'}
+]
+
+// 0: {name: 'az', title: 'Azerbaijani'}
+// 1: {name: 'ar', title: 'Arabic'}
+// 2: {name: 'cz', title: 'Czech'}
+// 3: {name: 'de', title: 'German'}
+// 4: {name: 'de_AT', title: 'German (Austria)'}
+// 5: {name: 'de_CH', title: 'German (Switzerland)'}
+// 6: {name: 'en', title: 'English'}
+// 7: {name: 'en_AU', title: 'English (Australia)'}
+// 8: {name: 'en_AU_ocker', title: 'English (Australia Ocker)'}
+// 9: {name: 'en_BORK', title: 'English (Bork)'}
+// 10: {name: 'en_CA', title: 'English (Canada)'}
+// 11: {name: 'en_GB', title: 'English (Great Britain)'}
+// 12: {name: 'en_IE', title: 'English (Ireland)'}
+// 13: {name: 'en_IND', title: 'English (India)'}
+// 14: {name: 'en_US', title: 'English (United States)'}
+// 15: {name: 'en_ZA', title: 'English (South Africa)'}
+// 16: {name: 'es', title: 'Spanish'}
+// 17: {name: 'es_MX', title: 'Spanish (Mexico)'}
+// 18: {name: 'fa', title: 'Farsi'}
+// 19: {name: 'fi', title: 'Finnish'}
+// 20: {name: 'fr', title: 'French'}
+// 21: {name: 'fr_CA', title: 'French (Canada)'}
+// 22: {name: 'fr_CH', title: 'French (Switzerland)'}
+// 23: {name: 'ge', title: 'Georgian'}
+// 24: {name: 'hy', title: 'Armenian'}
+// 25: {name: 'hr', title: 'Hrvatski'}
+// 26: {name: 'id_ID', title: 'Indonesia'}
+// 27: {name: 'it', title: 'Italian'}
+// 28: {name: 'ja', title: 'Japanese'}
+// 29: {name: 'ko', title: 'Korean'}
+// 30: {name: 'nb_NO', title: 'Norwegian'}
+// 31: {name: 'ne', title: 'Nepalese'}
+// 32: {name: 'nl', title: 'Dutch'}
+// 33: {name: 'nl_BE', title: 'Dutch (Belgium)'}
+// 34: {name: 'pl', title: 'Polish'}
+// 35: {name: 'pt_BR', title: 'Portuguese (Brazil)'}
+// 36: {name: 'pt_PT', title: 'Portuguese (Portugal)'}
+// 37: {name: 'ro', title: 'Romanian'}
+// 38: {name: 'ru', title: 'Russian'}
+// 39: {name: 'sk', title: 'Slovakian'}
+// 40: {name: 'sv', title: 'Swedish'}
+// 41: {name: 'tr', title: 'Turkish'}
+// 42: {name: 'uk', title: 'Ukrainian'}
+// 43: {name: 'vi', title: 'Vietnamese'}
+// 44: {name: 'zh_CN', title: 'Chinese'}
+// 45: {name: 'zh_TW', title: 'Chinese (Taiwan)'}
 
 const genTypes = [
     {value: "", title: "Select Type"},
@@ -41,14 +91,26 @@ window.onload = () => {
 
     console.log(_locales);
   
-    _locales.map((v) => {
-        const sel1 = document.querySelector(".select1");
-        var option = document.createElement("option");
-        option.text = v.title;
-        option.value = v.name;
-        sel1.appendChild(option);
-    });
-
+    const thelocale = actlocales.length>0 ? actlocales: _locales;
+    // if (actlocales.length > 0) {
+    //     // actlocales.map((v) => {
+    //     //     const vals = 
+    //     //     const sel0 = document.querySelector(".select1");
+    //     //     let option0 = document.createElement("option");
+    //     //     option.text = v.title;
+    //     //     option.value = v.name;
+    //     //     sel1.appendChild(option); 
+    //     // });
+    // } else {
+        thelocale.map((v) => {
+            const sel1 = document.querySelector(".select1");
+            var option = document.createElement("option");
+            option.text = v.title;
+            option.value = v.name;
+            sel1.appendChild(option);
+        });
+    
+    // }
     const btnadd = document.querySelector("#btnadd");
     btnadd.addEventListener("click", () => {
         console.log("button clicked");
@@ -163,4 +225,12 @@ window.onload = () => {
         const ta1 = document.querySelector("#ta1");
         ta1.textContent = str7;
     })
+
+    const btncopy = document.querySelector("#btncopy");
+    btncopy.addEventListener("click", () => {
+        const ta1 = document.querySelector("#ta1");
+        navigator.clipboard.writeText(ta1.value).then(e => {
+          console.log('Copied');
+        });
+    });
 }

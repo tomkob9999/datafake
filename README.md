@@ -13,8 +13,10 @@ On desktop (Windows/Mac/Linux/whatever), download the zip and unzip.  Then, laun
 - Dynamically add fields: CLOSED
 - Choose locale: CLOSED
 - Allow Delete line: CLOSED
-- Allow limited locales: OPEN
-- Alow copy of Output: OPEN
+- Allow limited locales: CLOSED
+- Alow copy of Output: CLOSED
+
+- Delete a field: OPEN
 - Allow output format JSON: OPEN
 - Allow output format TSV: OPEN
 - Choose the number of records: OPEN
