@@ -1,5 +1,5 @@
 const actlocales = [
-    // erase all if all locales are activated
+    // erase all if all locales are activated.
     {name: 'ja', title: 'Japanese'},
     {name: 'en_US', title: 'English (United States)'}
 ]
