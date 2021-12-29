@@ -7,7 +7,7 @@ This tool is to generate random "fake" test data.
 
 # Usage
 
-On desktop (Windows/Mac/Linux/whatever), download the zip and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
+On desktop (Windows/Mac/Linux/others), download the zip and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
 
 # Features
 - Dynamically add fields: CLOSED
@@ -24,6 +24,7 @@ On desktop (Windows/Mac/Linux/whatever), download the zip and unzip.  Then, laun
 - Allow numeric field of chosen range: CLOSED
 - Disable irrelevant fields: CLOSED
 
+- Allow blank
 - Allow decimal point and precision: OPEN
 - support katakana/katakana Names automatically translated from kanji name
 - flash copy success message LOW PRIORITY: OPEN

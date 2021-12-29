@@ -10,13 +10,21 @@ const defaults = {
     int_min: 0,
     int_max: 10000,
     max_int_max: 100000000,
+    year_min: 1920,
+    year_max: 2050,
+    max_year_max: 2100,
+    // Active Locales.  Leave empty to activate all available locales
+    active_locales: [
+        // {name: 'ja', title: 'Japanese'},
+        // {name: 'en_US', title: 'English (United States)'}
+        {name: 'ja'},
+        {name: 'en_US'}
+    ],
+    exclude_types: [
+        {value: 'password'}
+    ]
 }
 
-// Active Locales.  Leave empty to activate all available locales
-const actlocales = [
-    {name: 'ja', title: 'Japanese'},
-    {name: 'en_US', title: 'English (United States)'}
-]
 
 // Available locales
 // 0: {name: 'az', title: 'Azerbaijani'}
@@ -100,12 +108,42 @@ const genTypes = [
         // console.log("max", max);
         var N = crypto.getRandomValues(new Uint32Array(1))[0]%(max-min+1)+min;
         return N;
-    }
-},
-    {value: "fname", title: "First Name", func: ()=>faker.name.firstName()},
-    {value: "lname", title: "Last Name", func: ()=>faker.name.lastName()},
-    {value: "fullname", title: "Full Name", func: ()=>(faker.name.lastName() + " " +  faker.name.firstName())},
-    {value: "dob", title: "Dat of Birth", func: ()=>{
+        }
+    },
+    {value: "yyyymmdd", title: "Date (yyyymmdd)", enable_min: true, enable_max: true, func: (min, max)=>{
+        // console.log("min", min);
+        // console.log("max", max);
+        var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+        var dob = faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)"));
+        var m = (dob.getMonth()+1);
+        var d = dob.getDate();
+        dob = "" + N + "" + (m<10?"0":"") + m + "" + (d<10?"0":"") + d;
+        return dob
+    }},
+    {value: "yyyy/mm/dd", title: "Date (yyyy/mm/dd)", enable_min: true, enable_max: true, func: (min, max)=>{
+        // console.log("min", min);
+        // console.log("max", max);
+        var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+        var dob = faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)"));
+        var m = (dob.getMonth()+1);
+        var d = dob.getDate();
+        dob = "" + N + "/" + (m<10?"0":"") + m + "/" + (d<10?"0":"") + d;
+        return dob
+    }},
+    {value: "yyyy-mm-dd", title: "Date (yyyy-mm-dd)", enable_min: true, enable_max: true, func: (min, max)=>{
+        // console.log("min", min);
+        // console.log("max", max);
+        var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+        var dob = faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)"));
+        var m = (dob.getMonth()+1);
+        var d = dob.getDate();
+        dob = "" + N + "-" + (m<10?"0":"") + m + "-" + (d<10?"0":"") + d;
+        return dob
+    }},
+    {value: "fname", title: "First Name", enable_min: false, enable_max: false, func: ()=>faker.name.firstName()},
+    {value: "lname", title: "Last Name", enable_min: false, enable_max: false, func: ()=>faker.name.lastName()},
+    {value: "fullname", title: "Full Name", enable_min: false, enable_max: false, func: ()=>(faker.name.lastName() + " " +  faker.name.firstName())},
+    {value: "dob", title: "Dat of Birth", enable_min: false, enable_max: false, func: ()=>{
         var dob = faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)"));
         dob = dob.getFullYear() + "-" + (dob.getMonth()+1) + "-" + dob.getDate();
         return dob
@@ -139,12 +177,16 @@ window.onload = () => {
 
     // console.log(_locales);
   
-    const thelocale = actlocales.length>0 ? actlocales: _locales;
+    const thelocale = defaults.active_locales.length>0 ? defaults.active_locales: _locales;
         thelocale.map((v) => {
+            let vv = v;
+            if (defaults.active_locales.length>0) {
+                vv = _locales.filter(d=>d.name == v.name)[0];
+            }
             const sel1 = document.querySelector(".select1");
             var option = document.createElement("option");
-            option.text = v.title;
-            option.value = v.name;
+            option.text = vv.title;
+            option.value = vv.name;
             sel1.appendChild(option);
         });
     
@@ -170,10 +212,12 @@ window.onload = () => {
         select1.classList.add("select1");
         newCell.appendChild(select1);
         genTypes.map((v) => {
-            let option1 = document.createElement("option");
-            option1.text = v.title;
-            option1.value = v.value;
-            select1.appendChild(option1);
+            if (!defaults.exclude_types.find(d=>d.value==v.value)) {
+                let option1 = document.createElement("option");
+                option1.text = v.title;
+                option1.value = v.value;
+                select1.appendChild(option1);
+            }
         });
         select1.addEventListener("change", (e) => {
             // console.log("type changed");
@@ -192,20 +236,12 @@ window.onload = () => {
             }
         });
 
-        // newCell = newRow.insertCell();
-        // const input2 = document.createElement("input");
-        // input2.setAttribute("type", "text");
-        // input2.setAttribute("class", "form-control");
-        // input2.setAttribute("placeholder", "Length");
-        // input2.setAttribute("aria-label", "Length");
-        // input2.setAttribute("aria-describedby", "basic-addon1");
-        // newCell.appendChild(input2);
         
         newCell = newRow.insertCell();
         const input4 = document.createElement("input");
         input4.setAttribute("type", "text");
         input4.setAttribute("class", "form-control");
-        input4.setAttribute("placeholder", "Min");
+        input4.setAttribute("placeholder", "Use yyyy");
         input4.setAttribute("aria-label", "Min");
         input4.setAttribute("aria-describedby", "basic-addon1");
         newCell.appendChild(input4);
@@ -214,7 +250,7 @@ window.onload = () => {
         const input3 = document.createElement("input");
         input3.setAttribute("type", "text");
         input3.setAttribute("class", "form-control");
-        input3.setAttribute("placeholder", "Max");
+        input3.setAttribute("placeholder", "for Date");
         input3.setAttribute("aria-label", "Max");
         input3.setAttribute("aria-describedby", "basic-addon1");
         newCell.appendChild(input3);
@@ -315,6 +351,7 @@ window.onload = () => {
                 let jsonrec = {}
                 let ss = "";
                 fields.map((d, index) => {
+                    // console.log(d.type);
                     if (d.type == "word") {
                         let min = defaults.word_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
@@ -334,7 +371,16 @@ window.onload = () => {
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.int_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.int_word_max) max = defaults.int_word_max;
+                        if (max > defaults.max_int_max) max = defaults.max_int_max;
+                        jsonrec[fields[index].name] = d.func(min, max);
+                    }
+                    else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
+                        // console.log("yyyy");
+                        let min = defaults.year_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.year_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_year_max) max = defaults.max_year_max;
                         jsonrec[fields[index].name] = d.func(min, max);
                     }
                     else {
@@ -382,7 +428,16 @@ window.onload = () => {
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.int_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.int_word_max) max = defaults.int_word_max;
+                        if (max > defaults.max_int_max) max = defaults.max_int_max;
+                        ss += d.func(min, max);
+                    }
+                    else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
+                        // console.log("yyyymmdd IN");
+                        let min = defaults.year_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.year_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_year_max) max = defaults.max_year_max;
                         ss += d.func(min, max);
                     }
                     else {
