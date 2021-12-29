@@ -13,6 +13,7 @@ const defaults = {
     year_min: 1920,
     year_max: 2050,
     max_year_max: 2100,
+    blank_freq: 15,
     // Active Locales.  Leave empty to activate all available locales below
     active_locales: [
         {name: 'en_US'},
@@ -77,11 +78,21 @@ const POS_TYPE = 1;
 // const POS_LEN = 2;
 const POS_MIN = 2;
 const POS_MAX = 3;
-const POS_DEL = 4;
+const POS_BLANK = 4;
+const POS_DEL = 5;
 
 const genTypes = [
     // {value: "", title: "Select Type"},
-    {value: "word", title: "Text (word)", enable_min: true, enable_max: true, func: (min, max)=>{
+    {value: "word", title: "Text (word)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+            const blank_freq = props.blank_freq;
+            if (blank_freq > 0) {
+                let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+                // console.log("blank_freq", n1);
+                if (n1 == 0) return "";
+            }
+
+            var max = props.max
+            var min = props.min
             var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             // console.log("max", max);
             var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
@@ -89,9 +100,16 @@ const genTypes = [
             return ss;
         }
     },
-    {value: "para", title: "Text (paragraph)", enable_min: false, enable_max: true, func: (max)=>{
+    {value: "para", title: "Text (paragraph)", enable_min: false, enable_max: true, fenable_blank: true, func: (props)=>{
+            const blank_freq = props.blank_freq;
+            if (blank_freq > 0) {
+                let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+                if (n1 == 0) return "";
+            }
+
+            var max = props.max
             let min = 10;
-            var S="abc def ghi jkl mno pqr stu vwx yzA BCDE FGH IJK LMN OPQ RST UVW XYZ";
+            var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ          .,.,.,'''";
             // console.log("max", max);
             var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
             var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('').trim();
@@ -101,14 +119,31 @@ const genTypes = [
             return ss.trim();
         }
     },
-    {value: "integer", title: "Integer", enable_min: true, enable_max: true, func: (min, max)=>{
+    {value: "integer", title: "Integer", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        // console.log("blank_freq", blank_freq);
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            // console.log("blank_freq", n1);
+            if (n1 == 0) return "";
+        }
+
+        var max = props.max
+        var min = props.min
         // console.log("min", min);
         // console.log("max", max);
         var N = crypto.getRandomValues(new Uint32Array(1))[0]%(max-min+1)+min;
         return N;
         }
     },
-    {value: "yyyymmdd", title: "Date (yyyymmdd)", enable_min: true, enable_max: true, func: (min, max)=>{
+    {value: "yyyymmdd", title: "Date (yyyymmdd)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        var max = props.max
+        var min = props.min
         // console.log("min", min);
         // console.log("max", max);
         var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
@@ -118,7 +153,14 @@ const genTypes = [
         dob = "" + N + "" + (m<10?"0":"") + m + "" + (d<10?"0":"") + d;
         return dob
     }},
-    {value: "yyyy/mm/dd", title: "Date (yyyy/mm/dd)", enable_min: true, enable_max: true, func: (min, max)=>{
+    {value: "yyyy/mm/dd", title: "Date (yyyy/mm/dd)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        var max = props.max
+        var min = props.min
         // console.log("min", min);
         // console.log("max", max);
         var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
@@ -128,7 +170,14 @@ const genTypes = [
         dob = "" + N + "/" + (m<10?"0":"") + m + "/" + (d<10?"0":"") + d;
         return dob
     }},
-    {value: "yyyy-mm-dd", title: "Date (yyyy-mm-dd)", enable_min: true, enable_max: true, func: (min, max)=>{
+    {value: "yyyy-mm-dd", title: "Date (yyyy-mm-dd)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        var max = props.max
+        var min = props.min
         // console.log("min", min);
         // console.log("max", max);
         var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
@@ -138,24 +187,119 @@ const genTypes = [
         dob = "" + N + "-" + (m<10?"0":"") + m + "-" + (d<10?"0":"") + d;
         return dob
     }},
-    {value: "fname", title: "First Name", enable_min: false, enable_max: false, func: ()=>faker.name.firstName()},
-    {value: "lname", title: "Last Name", enable_min: false, enable_max: false, func: ()=>faker.name.lastName()},
-    {value: "fullname", title: "Full Name", enable_min: false, enable_max: false, func: ()=>(faker.name.lastName() + " " +  faker.name.firstName())},
-    {value: "dob", title: "Dat of Birth", enable_min: false, enable_max: false, func: ()=>{
+    {value: "fname", title: "First Name", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.name.firstName()
+    }},
+    {value: "lname", title: "Last Name", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.name.lastName()
+    }},
+    {value: "fullname", title: "Full Name", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return (faker.name.lastName() + " " +  faker.name.firstName())
+    }},
+    {value: "dob", title: "Dat of Birth", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
         var dob = faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)"));
         dob = dob.getFullYear() + "-" + (dob.getMonth()+1) + "-" + dob.getDate();
         return dob
     }},
-    {value: "gender", title: "Gender", enable_min: false, enable_max: false, func: ()=>faker.name.gender()},
-    {value: "faddress", title: "Full Address", enable_min: false, enable_max: false, func: ()=>faker.address.zipCode() + " "  + faker.address.state() + ""  + faker.address.city() + ""  + faker.address.streetAddress()},
-    {value: "faddresswoz", title: "Full Address w/o Zip", enable_min: false, enable_max: false, func: ()=>faker.address.stateAbbr() + " "  + faker.address.city() + " "  + faker.address.streetAddress()},
-    {value: "zip", title: "Zip", enable_min: false, enable_max: false, func: ()=>faker.address.zipCode()},
-    {value: "street", title: "Street Address", enable_min: false, enable_max: false, func: ()=>faker.address.streetAddress()},
-    {value: "city", title: "City", enable_min: false, enable_max: false, func: ()=>faker.address.city()},
-    {value: "state", title: "State", enable_min: false, enable_max: false, func: ()=>faker.address.state()},
-    {value: "password", title: "Password", enable_min: false, enable_max: false, func: ()=>faker.internet.password()},
-    {value: "phone", title: "Phone Number", enable_min: false, enable_max: false, func: ()=>faker.phone.phoneNumber()},
-    {value: "email", title: "Email", enable_min: false, enable_max: false, func: ()=>{
+    {value: "gender", title: "Gender", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.name.gender()
+    }},
+    {value: "faddress", title: "Full Address", enable_min: false, enable_max: false, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.address.zipCode() + " "  + faker.address.state() + ""  + faker.address.city() + ""  + faker.address.streetAddress()
+    }},
+    {value: "faddresswoz", title: "Full Address w/o Zip", enable_min: false, enable_max: false, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.address.stateAbbr() + " "  + faker.address.city() + " "  + faker.address.streetAddress()
+    }},
+    {value: "zip", title: "Zip", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.address.zipCode()
+    }},
+    {value: "street", title: "Street Address", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.address.streetAddress()
+    }},
+    {value: "city", title: "City", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.address.city()
+    }},
+    {value: "state", title: "State", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.address.state()
+    }},
+    {value: "password", title: "Password", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        return faker.internet.password()
+    }},
+    {value: "phone", title: "Phone Number", enable_min: false, enable_max: false, enable_blank: true, func: (props)=> {
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+            return faker.phone.phoneNumber()
+        }
+    },
+    {value: "email", title: "Email", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
         var firstName = faker.name.firstName(),
         lastName = faker.name.lastName();
         return faker.internet.email(firstName, lastName);
@@ -239,7 +383,7 @@ window.onload = () => {
         const input4 = document.createElement("input");
         input4.setAttribute("type", "text");
         input4.setAttribute("class", "form-control");
-        input4.setAttribute("placeholder", "enter yyyy");
+        input4.setAttribute("placeholder", "Min");
         input4.setAttribute("aria-label", "Min");
         input4.setAttribute("aria-describedby", "basic-addon1");
         newCell.appendChild(input4);
@@ -248,10 +392,19 @@ window.onload = () => {
         const input3 = document.createElement("input");
         input3.setAttribute("type", "text");
         input3.setAttribute("class", "form-control");
-        input3.setAttribute("placeholder", "for Date");
+        input3.setAttribute("placeholder", "Max");
         input3.setAttribute("aria-label", "Max");
         input3.setAttribute("aria-describedby", "basic-addon1");
         newCell.appendChild(input3);
+
+        newCell = newRow.insertCell();
+        const input5 = document.createElement("input");
+        input5.setAttribute("type", "checkbox");
+        input5.setAttribute("class", "form-check-input");
+        input5.style.marginTop = "10px";
+        input5.style.marginBottom = "10px";
+        input5.style.marginLeft = "16px";
+        newCell.appendChild(input5);
 
         newCell = newRow.insertCell();
         const button1 = document.createElement("button");
@@ -313,6 +466,12 @@ window.onload = () => {
                     // console.log(text11.value);
                     obj = {...obj, min: text12.value};
                 }
+                else if (j == POS_BLANK) {
+                    // console.log(cell.innerHTML);
+                    let text12 = cell.getElementsByTagName('input')[0];
+                    // console.log(text11.value);
+                    obj = {...obj, allow_blank: text12.checked};
+                }
                 else if (j == POS_MAX) {
                     // console.log(cell.innerHTML);
                     let text13 = cell.getElementsByTagName('input')[0];
@@ -344,25 +503,33 @@ window.onload = () => {
         let delim = ",";
         
         if (outputformat == "json") {
-            const outjson = []
+            const outjson = [];
+            let props = {};
             for (let x=0; x<num_recs; x++) {
                 let jsonrec = {}
                 let ss = "";
                 fields.map((d, index) => {
+                    let res = null;
                     // console.log(d.type);
+                    props["blank_freq"] = (d.allow_blank) ? defaults.blank_freq : 0;
                     if (d.type == "word") {
                         let min = defaults.word_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.word_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                         if (max > defaults.max_word_max) max = defaults.max_word_max;
-                        jsonrec[fields[index].name] = d.func(min, max);
+                        props["min"] = min;
+                        props["max"] = max;
+                        // props = {min, max};
+                        res = d.func(props);
                     }
                     else if (d.type == "para") {
                         let max = defaults.para_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                         if (max > defaults.max_para_max) max = defaults.max_para_max;
-                        jsonrec[fields[index].name] = d.func(max);
+                        props["max"] = max;
+                        // props = {max};
+                        res = d.func(props);
                     }
                     else if (d.type == "integer") {
                         let min = defaults.int_min;
@@ -370,7 +537,11 @@ window.onload = () => {
                         let max = defaults.int_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                         if (max > defaults.max_int_max) max = defaults.max_int_max;
-                        jsonrec[fields[index].name] = d.func(min, max);
+                        props["min"] = min;
+                        props["max"] = max;
+                        // props = {min, max};
+                        res = d.func(props);
+                        if ("" == res) res = null;
                     }
                     else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
                         // console.log("yyyy");
@@ -379,11 +550,16 @@ window.onload = () => {
                         let max = defaults.year_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                         if (max > defaults.max_year_max) max = defaults.max_year_max;
-                        jsonrec[fields[index].name] = d.func(min, max);
+                        props["min"] = min;
+                        props["max"] = max;
+                        // props = {min, max};
+                        res = d.func(props);
+                    } else {
+                        res = d.func(props);
                     }
-                    else {
-                        jsonrec[fields[index].name] = d.func();
-                    }
+                    // else {
+                    jsonrec[fields[index].name] = res;
+                    // }
                 })
                 outjson.push(jsonrec);
             }
@@ -391,6 +567,7 @@ window.onload = () => {
             ta1.textContent = JSON.stringify(outjson, null, "\t");
         } else {
             
+            let props = {};
             if (outputformat == "tsv") 
             delim = "\t";
             let ss = "";
@@ -407,19 +584,26 @@ window.onload = () => {
                     if (index > 0) ss += delim;
                     // console.log(d.type);
                     // console.log(d.func());
+                    props["blank_freq"] = (d.allow_blank) ? defaults.blank_freq : 0;
                     if (d.type == "word") {
                         let min = defaults.word_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.word_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                         if (max > defaults.max_word_max) max = defaults.max_word_max;
-                        ss += d.func(min, max);
+                        // props = {min, max};
+                        props["min"] = min;
+                        props["max"] = max;
+                        // ss += d.func(min, max);
                     }
                     else if (d.type == "para") {
                             let max = defaults.para_max;
                             if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                             if (max > defaults.max_para_max) max = defaults.max_para_max;
-                            ss += d.func(max);
+                            // props = {max};
+                            // props["min"] = min;
+                            props["max"] = max;
+                            // ss += d.func(max);
                     }
                     else if (d.type == "integer") {
                         let min = defaults.int_min;
@@ -427,7 +611,10 @@ window.onload = () => {
                         let max = defaults.int_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                         if (max > defaults.max_int_max) max = defaults.max_int_max;
-                        ss += d.func(min, max);
+                        // props = {min, max};
+                        props["min"] = min;
+                        props["max"] = max;
+                        // ss += d.func(min, max);
                     }
                     else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
                         // console.log("yyyymmdd IN");
@@ -436,11 +623,18 @@ window.onload = () => {
                         let max = defaults.year_max;
                         if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
                         if (max > defaults.max_year_max) max = defaults.max_year_max;
-                        ss += d.func(min, max);
+                        
+                        props["min"] = min;
+                        props["max"] = max;
+                        // props = {min, max};
+                        // ss += d.func(min, max);
                     }
-                    else {
-                        ss += d.func();
-                    }
+                    // else {
+                    // console.log("d.allow_blank", d.allow_blank);
+                    // console.log("props.blank_freq", props["blank_freq"]);
+
+                    ss += d.func(props);
+                    // }
                 })
                 outtext.push(ss);
             }
