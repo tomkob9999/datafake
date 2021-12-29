@@ -13,12 +13,10 @@ const defaults = {
     year_min: 1920,
     year_max: 2050,
     max_year_max: 2100,
-    // Active Locales.  Leave empty to activate all available locales
+    // Active Locales.  Leave empty to activate all available locales below
     active_locales: [
-        // {name: 'ja', title: 'Japanese'},
-        // {name: 'en_US', title: 'English (United States)'}
-        {name: 'ja'},
-        {name: 'en_US'}
+        {name: 'en_US'},
+        {name: 'ja'}
     ],
     exclude_types: [
         {value: 'password'}
@@ -241,7 +239,7 @@ window.onload = () => {
         const input4 = document.createElement("input");
         input4.setAttribute("type", "text");
         input4.setAttribute("class", "form-control");
-        input4.setAttribute("placeholder", "Use yyyy");
+        input4.setAttribute("placeholder", "enter yyyy");
         input4.setAttribute("aria-label", "Min");
         input4.setAttribute("aria-describedby", "basic-addon1");
         newCell.appendChild(input4);

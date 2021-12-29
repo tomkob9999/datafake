@@ -4,7 +4,10 @@ Welcome!
 
 This tool is to generate random "fake" test data.
 
-
+#Highlights
+- developed by vanilla Javascript (thus, very light and fast)
+- visually enhanced by Bootstrap 5 ( https://getbootstrap.com )
+- the personal information generation is powered by Faker.js ( https://github.com/marak/Faker.js/ )
 # Usage
 
 On desktop (Windows/Mac/Linux/others), download the zip and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
