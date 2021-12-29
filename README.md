@@ -2,7 +2,7 @@
 
 Welcome!
 
-This tool is to generate fake test data randomly.
+This tool is to generate random "fake" test data.
 
 
 # Usage
