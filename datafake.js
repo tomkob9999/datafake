@@ -1,9 +1,16 @@
+// Default Values
+const defaults = {
+    num_recs: 100,
+    max_num_recs: 10000,
+}
+
+// Active Locales.  Leave empty to activate all available locales
 const actlocales = [
-    // erase all if all locales are activated
     {name: 'ja', title: 'Japanese'},
     {name: 'en_US', title: 'English (United States)'}
 ]
 
+// Available locales
 // 0: {name: 'az', title: 'Azerbaijani'}
 // 1: {name: 'ar', title: 'Arabic'}
 // 2: {name: 'cz', title: 'Czech'}
@@ -68,7 +75,6 @@ const genTypes = [
     {value: "street", title: "Street Address", func: ()=>faker.address.streetAddress()},
     {value: "city", title: "City", func: ()=>faker.address.city()},
     {value: "state", title: "State", func: ()=>faker.address.state()},
-    {value: "country", title: "Country", func: ()=>faker.locales[faker.locale].address.default_country},
     {value: "password", title: "Password", func: ()=>faker.internet.password()},
     {value: "phone", title: "Phone Number", func: ()=>faker.phone.phoneNumber()},
     {value: "email", title: "Email", func: ()=>{
@@ -89,7 +95,7 @@ window.onload = () => {
         _locales.push({ name: locale, title: faker.locales[locale].title})
     }
 
-    console.log(_locales);
+    // console.log(_locales);
   
     const thelocale = actlocales.length>0 ? actlocales: _locales;
     // if (actlocales.length > 0) {
@@ -113,7 +119,7 @@ window.onload = () => {
     // }
     const btnadd = document.querySelector("#btnadd");
     btnadd.addEventListener("click", () => {
-        console.log("button clicked");
+        // console.log("button clicked");
         const table = document.querySelector(".table");
         let newRow = table.insertRow();
 
@@ -155,6 +161,11 @@ window.onload = () => {
         button1.style.width = "80px";
         button1.style.height = "35px";
         button1.textContent = "Delete";
+        button1.addEventListener("click", (e) => {
+            // console.log("delete clicked");
+            // console.log(e.target);
+            e.target.parentElement.parentElement.remove();
+        });
         newCell.appendChild(button1);
 
     })
@@ -180,13 +191,13 @@ window.onload = () => {
                 if (j == 0) {
                     // console.log(cell.innerHTML);
                     let text10 = cell.getElementsByTagName('input')[0];
-                    console.log(text10.value);
+                    // console.log(text10.value);
                     obj = {...obj, name: text10.value};
                 }
                 if (j == 1) {
                     // console.log(cell.innerHTML);
                     var sel3 = cell.getElementsByTagName('select')[0];
-                    console.log(sel3.value);
+                    // console.log(sel3.value);
 
                     const func = genTypes.filter((d) => d.value == sel3.value)[0].func;
                     obj = {...obj, type: sel3.value, func: func};
@@ -194,13 +205,13 @@ window.onload = () => {
                 if (j == 2) {
                     // console.log(cell.innerHTML);
                     let text11 = cell.getElementsByTagName('input')[0];
-                    console.log(text11.value);
+                    // console.log(text11.value);
                     obj = {...obj, length: text11.value};
                 }
 			}
             fields.push(obj);
 		}
-        console.log(fields);
+        // console.log(fields);
         const sel11 = document.querySelector(".select1");
         // console.log("sel11.value");
         // console.log(sel11.value);
@@ -208,22 +219,60 @@ window.onload = () => {
         // console.log("faker.locale");
         // console.log(faker.locale);
         let outtext = [];
-        for (let x=0; x<100; x++) {
+        let num_recs = defaults.num_recs;
+        const sss = document.querySelector("#num_recs").value;
+        if (sss != "" && !isNaN(sss)) {
+            num_recs = parseInt(sss);
+        }
+        if (num_recs > defaults.max_num_recs) num_recs = defaults.max_num_recs; 
+        // console.log("num_recs", num_recs);
+
+        const outputformat = document.querySelector(".select2").value;
+        
+        // console.log("outputformat", outputformat);
+        let delim = ",";
+        
+        if (outputformat == "json") {
+            const outjson = []
+            for (let x=0; x<num_recs; x++) {
+                let jsonrec = {}
+                let ss = "";
+                fields.map((d, index) => {
+                    jsonrec[fields[index].name] = d.func();
+                })
+                outjson.push(jsonrec);
+            }
+            const ta1 = document.querySelector("#ta1");
+            ta1.textContent = JSON.stringify(outjson, null, "\t");
+        } else {
+            
+            if (outputformat == "tsv") 
+            delim = "\t";
             let ss = "";
             fields.map((d, index) => {
-                if (index > 0) ss += ",";
+                if (index > 0) ss += delim;
                 // console.log(d.type);
                 // console.log(d.func());
-                ss += d.func();
+                ss += d.name;
             })
             outtext.push(ss);
-        }
+            for (let x=0; x<num_recs; x++) {
+                ss = "";
+                fields.map((d, index) => {
+                    if (index > 0) ss += delim;
+                    // console.log(d.type);
+                    // console.log(d.func());
+                    ss += d.func();
+                })
+                outtext.push(ss);
+            }
+            const str7 = outtext.join("\n");
+            const ta1 = document.querySelector("#ta1");
+            ta1.textContent = str7;
+        } 
         // console.log("locale is");
         // console.log(faker.locale);
         // console.log(outtext);
-        const str7 = outtext.join("\n");
-        const ta1 = document.querySelector("#ta1");
-        ta1.textContent = str7;
     })
 
     const btncopy = document.querySelector("#btncopy");

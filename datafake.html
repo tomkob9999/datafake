@@ -34,11 +34,21 @@
         <!-- <option value="" selected>Select Locale</option> -->
       </select>
       <div class="txtNumRecs" style="width:90px; margin-left: 20px;"># of Recs:</div>
-      <input style="width:110px" type="text" class="form-control" placeholder="" aria-label="FieldName" aria-describedby="basic-addon1" value="100">
-</div>
-<div class="frmcont">
+      <input id="num_recs" style="width:110px;" type="text" class="form-control" placeholder="" aria-label="FieldName" aria-describedby="basic-addon1" value="">
+
+        <div class="txtlocale" style="margin-left: 20px;">Output Format:</div>
+        <select class="form-select select2" style="width:100px;" aria-label="Select Output Format">
+            <option value="csv">CSV</option>
+            <option value="tsv">TSV</option>
+            <option value="json">JSON</option>
+        </select>
+    </div>
+
+
+    <div class="frmcont">
 
 <div class="flexrowend">
+
     <button id="btngen" type="button" class="btn btn-primary">Generate</button>
 </div>
 <div class="flexrowend" style="margin-top:20px;">
@@ -59,14 +69,15 @@
       </tbody>
   </table>
 
-<div class="txtoutput">
-    Output:
-</div>
 <div class="flexrowend">
-    <button id="btncopy" type="button" class="btn btn-secondary btn-sm">Copy</button>
+    <div class="txtoutput" style="margin-left: 0px; ">
+        Output:
+    </div>
+    <button id="btncopy" type="button" class="btn btn-secondary btn-sm" style="margin-left: auto; margin-top: 30px">Copy</button>
 </div>
-<div class="form-floating" style="margin-top: 10px;">
-    <textarea id="ta1" class="form-control" placeholder="Leave a comment here" style="height: 500px; font-size: smaller;"></textarea>
+<div class="form-floating" style="margin-top: 5px; ">
+    <textarea id="ta1" class="form-control" style="height: 500px; font-size: smaller;padding: 8px "></textarea>
+    <!-- <textarea id="ta1" rows="100" style="height: 500px; width: 100%; font-size: smaller; padding: 10px"></textarea> -->
   </div>
 
 </div>
