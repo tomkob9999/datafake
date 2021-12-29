@@ -2,6 +2,14 @@
 const defaults = {
     num_recs: 100,
     max_num_recs: 10000,
+    word_min: 2,
+    word_max: 10,
+    max_word_max: 100,
+    para_max: 300,
+    max_para_max: 10000,
+    int_min: 0,
+    int_max: 10000,
+    max_int_max: 100000000,
 }
 
 // Active Locales.  Leave empty to activate all available locales
@@ -58,8 +66,42 @@ const actlocales = [
 // 44: {name: 'zh_CN', title: 'Chinese'}
 // 45: {name: 'zh_TW', title: 'Chinese (Taiwan)'}
 
+const POS_NAME = 0;
+const POS_TYPE = 1;
+// const POS_LEN = 2;
+const POS_MIN = 2;
+const POS_MAX = 3;
+const POS_DEL = 4;
+
 const genTypes = [
-    {value: "", title: "Select Type"},
+    // {value: "", title: "Select Type"},
+    {value: "word", title: "Text (word)", enable_min: true, enable_max: true, func: (min, max)=>{
+            var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            // console.log("max", max);
+            var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('');
+            return ss;
+        }
+    },
+    {value: "para", title: "Text (paragraph)", enable_min: false, enable_max: true, func: (max)=>{
+            let min = 10;
+            var S="abc def ghi jkl mno pqr stu vwx yzA BCDE FGH IJK LMN OPQ RST UVW XYZ";
+            // console.log("max", max);
+            var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('').trim();
+            ss = ss.replace("  ", " ")
+        
+            if (ss.length < 10) return "";
+            return ss.trim();
+        }
+    },
+    {value: "integer", title: "Integer", enable_min: true, enable_max: true, func: (min, max)=>{
+        // console.log("min", min);
+        // console.log("max", max);
+        var N = crypto.getRandomValues(new Uint32Array(1))[0]%(max-min+1)+min;
+        return N;
+    }
+},
     {value: "fname", title: "First Name", func: ()=>faker.name.firstName()},
     {value: "lname", title: "Last Name", func: ()=>faker.name.lastName()},
     {value: "fullname", title: "Full Name", func: ()=>(faker.name.lastName() + " " +  faker.name.firstName())},
@@ -68,16 +110,16 @@ const genTypes = [
         dob = dob.getFullYear() + "-" + (dob.getMonth()+1) + "-" + dob.getDate();
         return dob
     }},
-    {value: "gender", title: "Gender", func: ()=>faker.name.gender()},
-    {value: "faddress", title: "Full Address", func: ()=>faker.address.zipCode() + " "  + faker.address.state() + ""  + faker.address.city() + ""  + faker.address.streetAddress()},
-    {value: "faddresswoz", title: "Full Address w/o Zip", func: ()=>faker.address.stateAbbr() + " "  + faker.address.city() + " "  + faker.address.streetAddress()},
-    {value: "zip", title: "Zip", func: ()=>faker.address.zipCode()},
-    {value: "street", title: "Street Address", func: ()=>faker.address.streetAddress()},
-    {value: "city", title: "City", func: ()=>faker.address.city()},
-    {value: "state", title: "State", func: ()=>faker.address.state()},
-    {value: "password", title: "Password", func: ()=>faker.internet.password()},
-    {value: "phone", title: "Phone Number", func: ()=>faker.phone.phoneNumber()},
-    {value: "email", title: "Email", func: ()=>{
+    {value: "gender", title: "Gender", enable_min: false, enable_max: false, func: ()=>faker.name.gender()},
+    {value: "faddress", title: "Full Address", enable_min: false, enable_max: false, func: ()=>faker.address.zipCode() + " "  + faker.address.state() + ""  + faker.address.city() + ""  + faker.address.streetAddress()},
+    {value: "faddresswoz", title: "Full Address w/o Zip", enable_min: false, enable_max: false, func: ()=>faker.address.stateAbbr() + " "  + faker.address.city() + " "  + faker.address.streetAddress()},
+    {value: "zip", title: "Zip", enable_min: false, enable_max: false, func: ()=>faker.address.zipCode()},
+    {value: "street", title: "Street Address", enable_min: false, enable_max: false, func: ()=>faker.address.streetAddress()},
+    {value: "city", title: "City", enable_min: false, enable_max: false, func: ()=>faker.address.city()},
+    {value: "state", title: "State", enable_min: false, enable_max: false, func: ()=>faker.address.state()},
+    {value: "password", title: "Password", enable_min: false, enable_max: false, func: ()=>faker.internet.password()},
+    {value: "phone", title: "Phone Number", enable_min: false, enable_max: false, func: ()=>faker.phone.phoneNumber()},
+    {value: "email", title: "Email", enable_min: false, enable_max: false, func: ()=>{
         var firstName = faker.name.firstName(),
         lastName = faker.name.lastName();
         return faker.internet.email(firstName, lastName);
@@ -98,16 +140,6 @@ window.onload = () => {
     // console.log(_locales);
   
     const thelocale = actlocales.length>0 ? actlocales: _locales;
-    // if (actlocales.length > 0) {
-    //     // actlocales.map((v) => {
-    //     //     const vals = 
-    //     //     const sel0 = document.querySelector(".select1");
-    //     //     let option0 = document.createElement("option");
-    //     //     option.text = v.title;
-    //     //     option.value = v.name;
-    //     //     sel1.appendChild(option); 
-    //     // });
-    // } else {
         thelocale.map((v) => {
             const sel1 = document.querySelector(".select1");
             var option = document.createElement("option");
@@ -143,17 +175,50 @@ window.onload = () => {
             option1.value = v.value;
             select1.appendChild(option1);
         });
+        select1.addEventListener("change", (e) => {
+            // console.log("type changed");
+            const genType = genTypes.filter(d=>d.value==e.target.value)[0];
+            // console.log(genType.enable_max);
+            // console.log(e.target.parentElement.parentElement.children[4].children[0]);
+            if (genType.enable_min) {
+                e.target.parentElement.parentElement.children[POS_MIN].children[0].removeAttribute("disabled");
+            } else {
+                e.target.parentElement.parentElement.children[POS_MIN].children[0].setAttribute("disabled", true);
+            }
+            if (genType.enable_max) {
+                e.target.parentElement.parentElement.children[POS_MAX].children[0].removeAttribute("disabled");
+            } else {
+                e.target.parentElement.parentElement.children[POS_MAX].children[0].setAttribute("disabled", true);
+            }
+        });
 
+        // newCell = newRow.insertCell();
+        // const input2 = document.createElement("input");
+        // input2.setAttribute("type", "text");
+        // input2.setAttribute("class", "form-control");
+        // input2.setAttribute("placeholder", "Length");
+        // input2.setAttribute("aria-label", "Length");
+        // input2.setAttribute("aria-describedby", "basic-addon1");
+        // newCell.appendChild(input2);
+        
+        newCell = newRow.insertCell();
+        const input4 = document.createElement("input");
+        input4.setAttribute("type", "text");
+        input4.setAttribute("class", "form-control");
+        input4.setAttribute("placeholder", "Min");
+        input4.setAttribute("aria-label", "Min");
+        input4.setAttribute("aria-describedby", "basic-addon1");
+        newCell.appendChild(input4);
 
         newCell = newRow.insertCell();
-        const input2 = document.createElement("input");
-        input2.setAttribute("type", "text");
-        input2.setAttribute("class", "form-control");
-        input2.setAttribute("placeholder", "Length");
-        input2.setAttribute("aria-label", "Length");
-        input2.setAttribute("aria-describedby", "basic-addon1");
-        newCell.appendChild(input2);
-        
+        const input3 = document.createElement("input");
+        input3.setAttribute("type", "text");
+        input3.setAttribute("class", "form-control");
+        input3.setAttribute("placeholder", "Max");
+        input3.setAttribute("aria-label", "Max");
+        input3.setAttribute("aria-describedby", "basic-addon1");
+        newCell.appendChild(input3);
+
         newCell = newRow.insertCell();
         const button1 = document.createElement("button");
         button1.classList.add("btn");
@@ -188,13 +253,13 @@ window.onload = () => {
             if (i == 0) continue;
 			for (var j=0, colLen=table.rows[i].cells.length ; j<colLen; j++) {
 				var cell = table.rows[i].cells[j];
-                if (j == 0) {
+                if (j == POS_NAME) {
                     // console.log(cell.innerHTML);
                     let text10 = cell.getElementsByTagName('input')[0];
                     // console.log(text10.value);
                     obj = {...obj, name: text10.value};
                 }
-                if (j == 1) {
+                else if (j == POS_TYPE) {
                     // console.log(cell.innerHTML);
                     var sel3 = cell.getElementsByTagName('select')[0];
                     // console.log(sel3.value);
@@ -202,11 +267,23 @@ window.onload = () => {
                     const func = genTypes.filter((d) => d.value == sel3.value)[0].func;
                     obj = {...obj, type: sel3.value, func: func};
                 }
-                if (j == 2) {
+                // else if (j == POS_LEN) {
+                //     // console.log(cell.innerHTML);
+                //     let text11 = cell.getElementsByTagName('input')[0];
+                //     // console.log(text11.value);
+                //     obj = {...obj, length: text11.value};
+                // }
+                else if (j == POS_MIN) {
                     // console.log(cell.innerHTML);
-                    let text11 = cell.getElementsByTagName('input')[0];
+                    let text12 = cell.getElementsByTagName('input')[0];
                     // console.log(text11.value);
-                    obj = {...obj, length: text11.value};
+                    obj = {...obj, min: text12.value};
+                }
+                else if (j == POS_MAX) {
+                    // console.log(cell.innerHTML);
+                    let text13 = cell.getElementsByTagName('input')[0];
+                    // console.log(text11.value);
+                    obj = {...obj, max: text13.value};
                 }
 			}
             fields.push(obj);
@@ -238,7 +315,31 @@ window.onload = () => {
                 let jsonrec = {}
                 let ss = "";
                 fields.map((d, index) => {
-                    jsonrec[fields[index].name] = d.func();
+                    if (d.type == "word") {
+                        let min = defaults.word_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.word_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_word_max) max = defaults.max_word_max;
+                        jsonrec[fields[index].name] = d.func(min, max);
+                    }
+                    else if (d.type == "para") {
+                        let max = defaults.para_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_para_max) max = defaults.max_para_max;
+                        jsonrec[fields[index].name] = d.func(max);
+                    }
+                    else if (d.type == "integer") {
+                        let min = defaults.int_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.int_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.int_word_max) max = defaults.int_word_max;
+                        jsonrec[fields[index].name] = d.func(min, max);
+                    }
+                    else {
+                        jsonrec[fields[index].name] = d.func();
+                    }
                 })
                 outjson.push(jsonrec);
             }
@@ -262,7 +363,31 @@ window.onload = () => {
                     if (index > 0) ss += delim;
                     // console.log(d.type);
                     // console.log(d.func());
-                    ss += d.func();
+                    if (d.type == "word") {
+                        let min = defaults.word_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.word_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_word_max) max = defaults.max_word_max;
+                        ss += d.func(min, max);
+                    }
+                    else if (d.type == "para") {
+                            let max = defaults.para_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_para_max) max = defaults.max_para_max;
+                            ss += d.func(max);
+                    }
+                    else if (d.type == "integer") {
+                        let min = defaults.int_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.int_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.int_word_max) max = defaults.int_word_max;
+                        ss += d.func(min, max);
+                    }
+                    else {
+                        ss += d.func();
+                    }
                 })
                 outtext.push(ss);
             }

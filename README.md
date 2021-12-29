@@ -19,11 +19,11 @@ On desktop (Windows/Mac/Linux/whatever), download the zip and unzip.  Then, laun
 - Choose the number of records: CLOSED
 - Allow output format JSON: CLOSED
 - Allow output format TSV: CLOSED
+- Allow text field of chosen length: CLOSED
+- Allow date field of chosen range: CLOSED
+- Allow numeric field of chosen range: CLOSED
+- Disable irrelevant fields: CLOSED
 
-- Allow text field of chosen length: OPEN
-- Allow date field of chosen range: OPEN
-- Allow numeric field of chosen range: OPEN
 - Allow decimal point and precision: OPEN
-- Disable irrelevant fields: OPEN
 - support katakana/katakana Names automatically translated from kanji name
 - flash copy success message LOW PRIORITY: OPEN
