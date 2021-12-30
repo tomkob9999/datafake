@@ -6,7 +6,8 @@ This tool is to generate random "fake" test data.
 - written in vanilla Javascript (thus, very light and fast)
 - no server side processing
 - visually enhanced by Bootstrap 5 ( https://getbootstrap.com )
-- the personal information generation is powered by Faker.js ( https://github.com/marak/Faker.js/ )
+- personal information generation is powered by Faker.js ( https://github.com/marak/Faker.js/ )
+- original Japanese Kanji, Hiragana and Katakana conversion module is included
 # Usage
 
 On desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.

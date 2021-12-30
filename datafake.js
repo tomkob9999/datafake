@@ -211,7 +211,8 @@ const genTypes = [
         }
         // console.log("props", props);
         if (!("fname" in props) || props.fname == "") {
-            return "わかわか"
+            // return "わかわか"
+            return "";
         }
         return convKanjiToKunyomi(props.fname);
     }},
@@ -223,7 +224,8 @@ const genTypes = [
         }
         // console.log("props", props);
         if (!("fname" in props) || props.fname == "") {
-            return "わかわか"
+            // return "ワカワカ"
+            return "";
         }
         return convHira2Kata(convKanjiToKunyomi(props.fname));
     }},
@@ -247,7 +249,8 @@ const genTypes = [
         }
         // console.log("props", props);
         if (!("lname" in props) || props.lname == "") {
-            return "わかわか"
+            // return "わかわか"
+            return "";
         }
         return convKanjiToKunyomi(props.lname);
     }},
@@ -259,7 +262,8 @@ const genTypes = [
         }
         // console.log("props", props);
         if (!("lname" in props) || props.lname == "") {
-            return "わかわか"
+            // return "ワカワカ"
+            return "";
         }
         return convHira2Kata(convKanjiToKunyomi(props.lname));
     }},
@@ -288,7 +292,8 @@ const genTypes = [
         // console.log("props", props);
         // console.log("convKanjiToKunyomi", convKanjiToKunyomi("熊"));
         if (!("fullname" in props) || props.fullname == "") {
-            return "わかわか"
+            // return "わかわか わかわか";
+            return "";
         }
         return convKanjiToKunyomi(props.fullname);
     }},
@@ -300,7 +305,8 @@ const genTypes = [
         }
         // console.log("props", props);
         if (!("fullname" in props) || props.fullname == "") {
-            return "わかわか"
+            // return "ワカワカ ワカワカ"
+            return "";
         }
         return convHira2Kata(convKanjiToKunyomi(props.fullname));
     }},
