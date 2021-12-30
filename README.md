@@ -2,8 +2,9 @@
 
 This tool is to generate random "fake" test data.
 
-#Highlights
-- developed by vanilla Javascript (thus, very light and fast)
+# Highlights
+- written in vanilla Javascript (thus, very light and fast)
+- no server side processing
 - visually enhanced by Bootstrap 5 ( https://getbootstrap.com )
 - the personal information generation is powered by Faker.js ( https://github.com/marak/Faker.js/ )
 # Usage

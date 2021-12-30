@@ -304,7 +304,7 @@ const genTypes = [
         }
         return convHira2Kata(convKanjiToKunyomi(props.fullname));
     }},
-    {value: "dob", title: "Dat of Birth", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+    {value: "dob", title: "Date of Birth", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
         if (blank_freq > 0) {
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
