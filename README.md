@@ -9,7 +9,7 @@ This tool is to generate random "fake" test data.
 - the personal information generation is powered by Faker.js ( https://github.com/marak/Faker.js/ )
 # Usage
 
-On desktop (Windows/Mac/Linux/others), download the zip and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
+On desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
 
 # Features
 - Dynamically add fields: done
