@@ -25,7 +25,7 @@ On desktop (Windows/Mac/Linux/others), download the zip and unzip.  Then, launch
 - Allow numeric field of chosen range: done
 - Disable irrelevant fields: done
 - Allow blank: done
+- support katakana/katakana Names automatically translated from kanji name: done
 
-- support katakana/katakana Names automatically translated from kanji name: OPEN
 - flash copy success message LOW PRIORITY: OPEN
 - Allow decimal point and precision: OPEN

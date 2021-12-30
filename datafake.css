@@ -1,6 +1,6 @@
 /* @charset "UTF-8" */
 
-/* Theme Name: Faker On the web
+/* App Name: datafake.css
 Author: Tomio Kobayashi 
 Version: 0.92 */
 
@@ -66,6 +66,7 @@ body {
     position: relative;
     margin-top: 25px;
 }
+
 
 .txtlocale {
 

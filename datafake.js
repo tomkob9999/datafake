@@ -1,3 +1,7 @@
+// App Name: datafake.js
+// Author: Tomio Kobayashi 
+// Version: 0.902
+
 // Default Values
 const defaults = {
     num_recs: 100,
@@ -23,7 +27,6 @@ const defaults = {
         {value: 'password'}
     ]
 }
-
 
 // Available locales
 // 0: {name: 'az', title: 'Azerbaijani'}
@@ -193,7 +196,36 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return faker.name.firstName()
+        // return faker.name.firstName()
+        if (faker.locale == "ja") {
+            return generateJFirstName();
+        } else {
+            return faker.name.firstName();
+        }
+    }},
+    {value: "fname_hira", title: "First Name - Hira", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("fname" in props) || props.fname == "") {
+            return "わかわか"
+        }
+        return convKanjiToKunyomi(props.fname);
+    }},
+    {value: "fname_kata", title: "First Name - Kata", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("fname" in props) || props.fname == "") {
+            return "わかわか"
+        }
+        return convHira2Kata(convKanjiToKunyomi(props.fname));
     }},
     {value: "lname", title: "Last Name", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -201,7 +233,35 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return faker.name.lastName()
+        if (faker.locale == "ja") {
+            return generateJLastName();
+        } else {
+            return faker.name.lastName();
+        }
+    }},
+    {value: "lname_hira", title: "Last Name - Hira", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("lname" in props) || props.lname == "") {
+            return "わかわか"
+        }
+        return convKanjiToKunyomi(props.lname);
+    }},
+    {value: "lname_kata", title: "Last Name - Kata", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("lname" in props) || props.lname == "") {
+            return "わかわか"
+        }
+        return convHira2Kata(convKanjiToKunyomi(props.lname));
     }},
     {value: "fullname", title: "Full Name", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -209,7 +269,40 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return (faker.name.lastName() + " " +  faker.name.firstName())
+        
+        if (faker.locale == "ja") {
+            // return generateJLastName();
+            // return (generateJLastName() + " " +  faker.name.firstName())
+            return (generateJLastName() + " " +  generateJFirstName())
+        } else {
+            // return faker.name.lastName();
+            return (faker.name.lastName() + " " +  faker.name.firstName())
+        }
+    }},
+    {value: "fullname_hira", title: "Full Name - Hira", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        // console.log("convKanjiToKunyomi", convKanjiToKunyomi("熊"));
+        if (!("fullname" in props) || props.fullname == "") {
+            return "わかわか"
+        }
+        return convKanjiToKunyomi(props.fullname);
+    }},
+    {value: "fullname_kata", title: "Full Name - Kata", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("fullname" in props) || props.fullname == "") {
+            return "わかわか"
+        }
+        return convHira2Kata(convKanjiToKunyomi(props.fullname));
     }},
     {value: "dob", title: "Dat of Birth", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -307,7 +400,7 @@ const genTypes = [
 ]
 
 var _locales = [];
-
+// var currentLocale = "";
 // console.log("HelloHello");
 // console.log(_locales);
 
@@ -332,6 +425,7 @@ window.onload = () => {
             sel1.appendChild(option);
         });
     
+        // currentLocale = document.querySelector(".select1").value;
     // }
     const btnadd = document.querySelector("#btnadd");
     btnadd.addEventListener("click", () => {
@@ -486,6 +580,7 @@ window.onload = () => {
         // console.log("sel11.value");
         // console.log(sel11.value);
         faker.locale = (sel11.value == "") ? "ja" : sel11.value;
+        // currentLocale = sel11.value;
         // console.log("faker.locale");
         // console.log(faker.locale);
         let outtext = [];
@@ -506,6 +601,10 @@ window.onload = () => {
             const outjson = [];
             let props = {};
             for (let x=0; x<num_recs; x++) {
+                let fname = "";
+                let lname = "";
+                let fullname = "";
+
                 let jsonrec = {}
                 let ss = "";
                 fields.map((d, index) => {
@@ -554,7 +653,35 @@ window.onload = () => {
                         props["max"] = max;
                         // props = {min, max};
                         res = d.func(props);
-                    } else {
+                    }
+                    else if (d.type == "fname") {
+                        res = d.func(props);
+                        fname = res;
+                    }
+                    else if (["fname_hira", "fname_kata"].includes(d.type)) {
+                        // console.log("fname", fname);
+                        props["fname"] = fname;
+                        res = d.func(props);
+                    }
+                    else if (d.type == "lname") {
+                        res = d.func(props);
+                        lname = res;
+                    }
+                    // else if (d.type == "lname_hira") {
+                    else if (["lname_hira", "lname_kata"].includes(d.type)) {
+                        props["lname"] = lname;
+                        res = d.func(props);
+                    }
+                    else if (d.type == "fullname") {
+                        res = d.func(props);
+                        fullname = res;
+                    }
+                    // else if (d.type == "fullname_hira") {
+                    else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
+                        props["fullname"] = fullname;
+                        res = d.func(props);
+                    }
+                    else {
                         res = d.func(props);
                     }
                     // else {
@@ -580,6 +707,9 @@ window.onload = () => {
             outtext.push(ss);
             for (let x=0; x<num_recs; x++) {
                 ss = "";
+                let fname = "";
+                let lname = "";
+                let fullname = "";
                 fields.map((d, index) => {
                     if (index > 0) ss += delim;
                     // console.log(d.type);
@@ -597,13 +727,13 @@ window.onload = () => {
                         // ss += d.func(min, max);
                     }
                     else if (d.type == "para") {
-                            let max = defaults.para_max;
-                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                            if (max > defaults.max_para_max) max = defaults.max_para_max;
-                            // props = {max};
-                            // props["min"] = min;
-                            props["max"] = max;
-                            // ss += d.func(max);
+                        let max = defaults.para_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_para_max) max = defaults.max_para_max;
+                        // props = {max};
+                        // props["min"] = min;
+                        props["max"] = max;
+                        // ss += d.func(max);
                     }
                     else if (d.type == "integer") {
                         let min = defaults.int_min;
@@ -629,11 +759,36 @@ window.onload = () => {
                         // props = {min, max};
                         // ss += d.func(min, max);
                     }
+                    else if (["fname_hira", "fname_kata"].includes(d.type)) {
+                        // console.log("fname", fname);
+                        props["fname"] = fname;
+                    }
+                    else if (["lname_hira", "lname_kata"].includes(d.type)) {
+                    // else if (d.type == "lname_hira") {
+                        // console.log("fname", fname);
+                        props["lname"] = lname;
+                    }
+                    // else if (d.type == "fullname_hira") {
+                    else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
+                        // console.log("fname", fname);
+                        props["fullname"] = fullname;
+                    }
                     // else {
                     // console.log("d.allow_blank", d.allow_blank);
                     // console.log("props.blank_freq", props["blank_freq"]);
+                    
+                    let sss = d.func(props);
 
-                    ss += d.func(props);
+                    if (d.type == "fname") {
+                        fname = sss;
+                    }
+                    else if (d.type == "lname") {
+                        lname = sss;
+                    }
+                    else if (d.type == "fullname") {
+                        fullname = sss;
+                    }
+                    ss += sss;
                     // }
                 })
                 outtext.push(ss);
