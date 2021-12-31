@@ -335,9 +335,10 @@ const genTypes = [
             if (n1 == 0) return "";
         }
         if (faker.locale == "ja") {
-            const state = generatePrefecture();
-            const city = generateCity(state);
-            return faker.address.zipCode() + " "  + state + "" + city + ""  + faker.address.streetAddress();
+            // const state = generatePrefecture();
+            // const city = generateCity(state);
+            // return faker.address.zipCode() + " "  + state + "" + city + ""  + faker.address.streetAddress();
+            return generateFullAddress();
         } else {
             // return faker.address.zipCode() + " "  + faker.address.state() + " "  + faker.address.city() + " "  + faker.address.streetAddress();
             return faker.address.streetAddress() + " "  + faker.address.city() + " "  + faker.address.state() + " "  + faker.address.zipCode()
@@ -350,9 +351,10 @@ const genTypes = [
             if (n1 == 0) return "";
         }
         if (faker.locale == "ja") {
-            const state = generatePrefecture();
-            const city = generateCity(state);
-            return state + "" + city + ""  + faker.address.streetAddress();
+            // const state = generatePrefecture();
+            // const city = generateCity(state);
+            // return state + "" + city + ""  + faker.address.streetAddress();
+            return generateFullAddressNoZip();
         } else {
             // return faker.address.zipCode() + " "  + faker.address.state() + " "  + faker.address.city() + " "  + faker.address.streetAddress();
             return faker.address.streetAddress() + " "  + faker.address.city() + " "  + faker.address.state();
