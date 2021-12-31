@@ -334,7 +334,14 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return faker.address.zipCode() + " "  + faker.address.state() + ""  + faker.address.city() + ""  + faker.address.streetAddress()
+        if (faker.locale == "ja") {
+            const state = generatePrefecture();
+            const city = generateCity(state);
+            return faker.address.zipCode() + " "  + state + "" + city + ""  + faker.address.streetAddress();
+        } else {
+            // return faker.address.zipCode() + " "  + faker.address.state() + " "  + faker.address.city() + " "  + faker.address.streetAddress();
+            return faker.address.streetAddress() + " "  + faker.address.city() + " "  + faker.address.state() + " "  + faker.address.zipCode()
+        }
     }},
     {value: "faddresswoz", title: "Full Address w/o Zip", enable_min: false, enable_max: false, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -342,7 +349,14 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return faker.address.stateAbbr() + " "  + faker.address.city() + " "  + faker.address.streetAddress()
+        if (faker.locale == "ja") {
+            const state = generatePrefecture();
+            const city = generateCity(state);
+            return state + "" + city + ""  + faker.address.streetAddress();
+        } else {
+            // return faker.address.zipCode() + " "  + faker.address.state() + " "  + faker.address.city() + " "  + faker.address.streetAddress();
+            return faker.address.streetAddress() + " "  + faker.address.city() + " "  + faker.address.state();
+        }
     }},
     {value: "zip", title: "Zip", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -366,7 +380,12 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return faker.address.city()
+        // return faker.address.city()
+        if (faker.locale == "ja") {
+            return generateCity(props.state);
+        } else {
+            return faker.address.city();
+        }
     }},
     {value: "state", title: "State", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -610,6 +629,7 @@ window.onload = () => {
                 let fname = "";
                 let lname = "";
                 let fullname = "";
+                let state = "";
 
                 let jsonrec = {}
                 let ss = "";
@@ -682,9 +702,17 @@ window.onload = () => {
                         res = d.func(props);
                         fullname = res;
                     }
+                    else if (d.type == "state") {
+                        res = d.func(props);
+                        state = res;
+                    }
                     // else if (d.type == "fullname_hira") {
                     else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
                         props["fullname"] = fullname;
+                        res = d.func(props);
+                    }
+                    else if (["city"].includes(d.type)) {
+                        props["state"] = state;
                         res = d.func(props);
                     }
                     else {
@@ -716,6 +744,7 @@ window.onload = () => {
                 let fname = "";
                 let lname = "";
                 let fullname = "";
+                let state = "";
                 fields.map((d, index) => {
                     if (index > 0) ss += delim;
                     // console.log(d.type);
@@ -779,6 +808,10 @@ window.onload = () => {
                         // console.log("fname", fname);
                         props["fullname"] = fullname;
                     }
+                    else if (["city"].includes(d.type)) {
+                        // console.log("fname", fname);
+                        props["state"] = state;
+                    }
                     // else {
                     // console.log("d.allow_blank", d.allow_blank);
                     // console.log("props.blank_freq", props["blank_freq"]);
@@ -793,6 +826,9 @@ window.onload = () => {
                     }
                     else if (d.type == "fullname") {
                         fullname = sss;
+                    }
+                    else if (d.type == "state") {
+                        state = sss;
                     }
                     ss += sss;
                     // }

@@ -7,7 +7,7 @@ This tool is to generate random "fake" test data.
 - no server side processing
 - visually enhanced by Bootstrap 5 ( https://getbootstrap.com )
 - personal information generation is powered by Faker.js ( https://github.com/marak/Faker.js/ )
-- original Japanese Kanji, Hiragana and Katakana conversion module is included
+- original Japanese name and address generation/conversion modules are included
 # Usage
 
 On desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
@@ -29,5 +29,6 @@ On desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, l
 - Allow blank: done
 - support katakana/katakana Names automatically translated from kanji name: done
 
+- street address is messed up: OPEN
 - flash copy success message LOW PRIORITY: OPEN
 - Allow decimal point and precision: OPEN
