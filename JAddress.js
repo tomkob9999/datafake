@@ -1765,7 +1765,7 @@ citylist.map(d=>{
 // console.log("citydict", citydict);
 
 const generatePrefecture = ()=>{
-    return prefs[crypto.getRandomValues(new Uint16Array(1))[0]%(prefs.length)];
+    return prefs2[crypto.getRandomValues(new Uint16Array(1))[0]%(prefs.length)];
 }
 
 const generateCity = (pref) => {

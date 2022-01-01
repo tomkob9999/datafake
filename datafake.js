@@ -374,7 +374,17 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return faker.address.streetAddress()
+        if (faker.locale == "ja") {
+            // console.log("props.state", props.state);
+            // console.log("props.city", props.city);
+            if (props.state && props.city) {
+                return generateStreet(props.state + props.city);
+            } else {
+                return faker.address.streetAddress()
+            }
+        } else {
+            return faker.address.streetAddress()
+        }
     }},
     {value: "city", title: "City", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -383,6 +393,7 @@ const genTypes = [
             if (n1 == 0) return "";
         }
         // return faker.address.city()
+            // console.log("props.state", props.state);
         if (faker.locale == "ja") {
             return generateCity(props.state);
         } else {
@@ -395,7 +406,7 @@ const genTypes = [
             let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
             if (n1 == 0) return "";
         }
-        return faker.address.state()
+        return faker.address.state();
     }},
     {value: "password", title: "Password", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -632,6 +643,7 @@ window.onload = () => {
                 let lname = "";
                 let fullname = "";
                 let state = "";
+                let city = "";
 
                 let jsonrec = {}
                 let ss = "";
@@ -705,18 +717,37 @@ window.onload = () => {
                         fullname = res;
                     }
                     else if (d.type == "state") {
+                        // console.log("state out", state);
                         res = d.func(props);
                         state = res;
+                    }
+                    else if (d.type == "city") {
+                        props["state"] = state;
+                        res = d.func(props);
+                        city = res;
+                    }
+                    else if (d.type == "street") {
+                        props["state"] = state;
+                        props["city"] = city;
+                        res = d.func(props);
+                        street = res;
                     }
                     // else if (d.type == "fullname_hira") {
                     else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
                         props["fullname"] = fullname;
                         res = d.func(props);
                     }
-                    else if (["city"].includes(d.type)) {
-                        props["state"] = state;
-                        res = d.func(props);
-                    }
+                    // // else if (["city"].includes(d.type)) {
+                    // else if (["city"].includes(d.type)) {
+                    //     props["state"] = state;
+                    //     console.log("state in", state);
+                    //     res = d.func(props);
+                    // }
+                    // else if (["street"].includes(d.type)) {
+                    //     props["state"] = state;
+                    //     props["city"] = city;
+                    //     res = d.func(props);
+                    // }
                     else {
                         res = d.func(props);
                     }
@@ -747,6 +778,7 @@ window.onload = () => {
                 let lname = "";
                 let fullname = "";
                 let state = "";
+                let city = "";
                 fields.map((d, index) => {
                     if (index > 0) ss += delim;
                     // console.log(d.type);
@@ -814,6 +846,10 @@ window.onload = () => {
                         // console.log("fname", fname);
                         props["state"] = state;
                     }
+                    else if (["street"].includes(d.type)) {
+                        // console.log("fname", fname);
+                        props["city"] = state;
+                    }
                     // else {
                     // console.log("d.allow_blank", d.allow_blank);
                     // console.log("props.blank_freq", props["blank_freq"]);
@@ -831,6 +867,9 @@ window.onload = () => {
                     }
                     else if (d.type == "state") {
                         state = sss;
+                    }
+                    else if (d.type == "city") {
+                        city = sss;
                     }
                     ss += sss;
                     // }
