@@ -86,7 +86,7 @@ const POS_DEL = 5;
 
 const genTypes = [
     // {value: "", title: "Select Type"},
-    {value: "word", title: "Text (word)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+    {value: "word", title: "Text (word)", enable_min: false, enable_max: false, enable_blank: false, func: (props)=>{
             const blank_freq = props.blank_freq;
             if (blank_freq > 0) {
                 let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
@@ -95,12 +95,19 @@ const genTypes = [
             }
 
             var max = props.max
-            var min = props.min
-            var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            // console.log("max", max);
-            var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
-            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('');
-            return ss;
+            // var min = props.min
+            // var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            // // console.log("max", max);
+            // var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+            // var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('');
+            // return ss;
+            
+            if (faker.locale == "ja") {
+                return pickKanjiWord();
+            }
+            else {
+                return faker.lorem.word(max);
+            } 
         }
     },
     {value: "para", title: "Text (paragraph)", enable_min: false, enable_max: true, fenable_blank: true, func: (props)=>{
@@ -112,14 +119,21 @@ const genTypes = [
 
             var max = props.max
             let min = 10;
-            var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ          .,.,.,'''";
-            // console.log("max", max);
-            var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
-            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('').trim();
-            ss = ss.replace("  ", " ")
+            // var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ          .,.,.,'''";
+            // // console.log("max", max);
+            // var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+            // var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('').trim();
+            // ss = ss.replace("  ", " ")
         
-            if (ss.length < 10) return "";
-            return ss.trim();
+            // if (ss.length < 10) return "";
+            // return ss.trim();
+            
+            if (faker.locale == "ja") {
+                return generateJParagraph(max);
+            }
+            else {
+                return faker.lorem.paragraph(max);
+            }
         }
     },
     {value: "integer", title: "Integer", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
@@ -518,6 +532,7 @@ window.onload = () => {
         input4.setAttribute("placeholder", "Min");
         input4.setAttribute("aria-label", "Min");
         input4.setAttribute("aria-describedby", "basic-addon1");
+        input4.setAttribute("disabled", true);
         newCell.appendChild(input4);
 
         newCell = newRow.insertCell();
@@ -527,6 +542,7 @@ window.onload = () => {
         input3.setAttribute("placeholder", "Max");
         input3.setAttribute("aria-label", "Max");
         input3.setAttribute("aria-describedby", "basic-addon1");
+        input3.setAttribute("disabled", true);
         newCell.appendChild(input3);
 
         newCell = newRow.insertCell();
