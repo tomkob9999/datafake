@@ -737,7 +737,7 @@ window.onload = () => {
                         props["fullname"] = fullname;
                         res = d.func(props);
                     }
-                    // // else if (["city"].includes(d.type)) {
+                    // // else if (["city"].includes(d.type)) 
                     // else if (["city"].includes(d.type)) {
                     //     props["state"] = state;
                     //     console.log("state in", state);
@@ -842,11 +842,13 @@ window.onload = () => {
                         // console.log("fname", fname);
                         props["fullname"] = fullname;
                     }
-                    else if (["city"].includes(d.type)) {
+                    // else if (["city"].includes(d.type)) {
+                    else if (d.type == "city") {
                         // console.log("fname", fname);
                         props["state"] = state;
                     }
-                    else if (["street"].includes(d.type)) {
+                    // else if (["street"].includes(d.type)) {
+                    else if (d.type == "street") {
                         // console.log("fname", fname);
                         props["city"] = state;
                     }
