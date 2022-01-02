@@ -153,6 +153,28 @@ const genTypes = [
         return N;
         }
     },
+    {value: "intzero", title: "Integer - zero-suppress", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+            const blank_freq = props.blank_freq;
+            // console.log("blank_freq", blank_freq);
+            if (blank_freq > 0) {
+                let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+                // console.log("blank_freq", n1);
+                if (n1 == 0) return "";
+            }
+
+            var max = props.max
+            var min = props.min
+            // console.log("min", min);
+            // console.log("max", max);
+            var N = crypto.getRandomValues(new Uint32Array(1))[0]%(max-min+1)+min;
+            const ns = "" + N;
+            const maxs = "" + max;
+            // console.log("N", N);
+            // console.log("ns", ns);
+
+            return "0".repeat(maxs.length - ns.length) + ns;
+        }
+    },
     {value: "yyyymmdd", title: "Date (yyyymmdd)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
         if (blank_freq > 0) {
@@ -686,7 +708,8 @@ window.onload = () => {
                         // props = {max};
                         res = d.func(props);
                     }
-                    else if (d.type == "integer") {
+                    // else if (d.type == "integer") {
+                    else if (["integer", "intzero"].includes(d.type)) {
                         let min = defaults.int_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.int_max;
@@ -820,7 +843,7 @@ window.onload = () => {
                         props["max"] = max;
                         // ss += d.func(max);
                     }
-                    else if (d.type == "integer") {
+                    else if (["integer", "intzero"].includes(d.type)) {
                         let min = defaults.int_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.int_max;
