@@ -7,7 +7,7 @@ This tool is to generate random "fake" test data.
 - no server side processing
 - visually enhanced by Bootstrap 5 ( https://getbootstrap.com )
 - personal information generation is powered by Faker.js ( https://github.com/marak/Faker.js/ )
-- original Japanese name, address and text generation/conversion modules are included (these should be quite powerful compared to other ones)
+- original Japanese name, address and text generation/conversion modules are included (these libraries are not light, but quite powerful)
 # Usage
 
 On desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
