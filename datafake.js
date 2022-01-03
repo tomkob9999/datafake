@@ -402,7 +402,8 @@ const genTypes = [
             return (generateJLastName() + " " +  generateJFirstName())
         } else {
             // return faker.name.lastName();
-            return (faker.name.lastName() + " " +  faker.name.firstName())
+            return (faker.name.firstName() + " " +  faker.name.lastName())
+            // return (faker.name.lastName() + " " +  faker.name.firstName())
         }
     }},
     {value: "fullname_hira", title: "Full Name - Hira", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
