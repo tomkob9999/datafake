@@ -11,6 +11,9 @@ const defaults = {
     max_word_max: 100,
     para_max: 300,
     max_para_max: 10000,
+    alpha_min: 2,
+    alpha_max: 6,
+    max_alpha_max: 50,
     int_min: 0,
     int_max: 10000,
     max_int_max: 100000000,
@@ -86,7 +89,7 @@ const POS_DEL = 5;
 
 const genTypes = [
     // {value: "", title: "Select Type"},
-    {value: "word", title: "Text (word)", enable_min: false, enable_max: false, enable_blank: false, func: (props)=>{
+    {value: "word", title: "Text (word)", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
             const blank_freq = props.blank_freq;
             if (blank_freq > 0) {
                 let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
@@ -110,7 +113,7 @@ const genTypes = [
             } 
         }
     },
-    {value: "para", title: "Text (paragraph)", enable_min: false, enable_max: true, fenable_blank: true, func: (props)=>{
+    {value: "para", title: "Text (paragraph)", enable_min: false, enable_max: true, enable_blank: true, func: (props)=>{
             const blank_freq = props.blank_freq;
             if (blank_freq > 0) {
                 let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
@@ -134,6 +137,44 @@ const genTypes = [
             else {
                 return faker.lorem.paragraph(max);
             }
+        }
+    },
+    {value: "alphaup", title: "Alphabets (Upper)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+            const blank_freq = props.blank_freq;
+            if (blank_freq > 0) {
+                let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+                // console.log("blank_freq", n1);
+                if (n1 == 0) return "";
+            }
+
+            var max = props.max
+            var min = props.min
+            // var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var S="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            // console.log("max", max);
+            var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('');
+            // var ss = Array.from(crypto.getRandomValues(new Uint16Array(max))).map((n)=>S[n%S.length]).join('');
+            return ss;
+        }
+    },
+    {value: "alphalo", title: "Alphabets (Lower)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+            const blank_freq = props.blank_freq;
+            if (blank_freq > 0) {
+                let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+                // console.log("blank_freq", n1);
+                if (n1 == 0) return "";
+            }
+
+            var max = props.max
+            var min = props.min
+            // var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var S="abcdefghijklmnopqrstuvwxyz";
+            // console.log("max", max);
+            var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>S[n%S.length]).join('');
+            // var ss = Array.from(crypto.getRandomValues(new Uint16Array(max))).map((n)=>S[n%S.length]).join('');
+            return ss;
         }
     },
     {value: "integer", title: "Integer", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
@@ -709,6 +750,19 @@ window.onload = () => {
                         res = d.func(props);
                     }
                     // else if (d.type == "integer") {
+                    else if (["alphaup", "alphalo"].includes(d.type)) {
+                        let min = defaults.alpha_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.alpha_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_alpha_max) max = defaults.max_alpha_max;
+                        props["min"] = min;
+                        props["max"] = max;
+                        // props = {min, max};
+                        res = d.func(props);
+                        if ("" == res) res = null;
+                    }
+                    // else if (d.type == "integer") {
                     else if (["integer", "intzero"].includes(d.type)) {
                         let min = defaults.int_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
@@ -842,6 +896,17 @@ window.onload = () => {
                         // props["min"] = min;
                         props["max"] = max;
                         // ss += d.func(max);
+                    }
+                    else if (["alphaup", "alphalo"].includes(d.type)) {
+                        let min = defaults.alpha_min;
+                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                        let max = defaults.alpha_max;
+                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                        if (max > defaults.max_alpha_max) max = defaults.max_alpha_max;
+                        // props = {min, max};
+                        props["min"] = min;
+                        props["max"] = max;
+                        // ss += d.func(min, max);
                     }
                     else if (["integer", "intzero"].includes(d.type)) {
                         let min = defaults.int_min;
