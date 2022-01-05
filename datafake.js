@@ -177,7 +177,7 @@ const genTypes = [
             return ss;
         }
     },
-    {value: "joyokanji", title: "Kanji (Only Joyo)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+    {value: "joyokanji", title: "Japanese Text (Kanji)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
             const blank_freq = props.blank_freq;
             if (blank_freq > 0) {
                 let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
@@ -192,7 +192,7 @@ const genTypes = [
             return ss;
         }
     },
-    {value: "hira", title: "Hiragana", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+    {value: "hira", title: "Japanese Text (Hiragana)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
             const blank_freq = props.blank_freq;
             if (blank_freq > 0) {
                 let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
@@ -207,7 +207,7 @@ const genTypes = [
             return ss;
         }
     },
-    {value: "kata", title: "Katakana", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+    {value: "kata", title: "Japanese Text (Katakana)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
             const blank_freq = props.blank_freq;
             if (blank_freq > 0) {
                 let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
@@ -219,6 +219,34 @@ const genTypes = [
             var min = props.min
             var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
             var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>katakanas[n%katakanas.length]).join('');
+            return ss;
+        }
+    },
+    {value: "mixjap", title: "Japanese Text (Mixed)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+            const blank_freq = props.blank_freq;
+            if (blank_freq > 0) {
+                let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+                // console.log("blank_freq", n1);
+                if (n1 == 0) return "";
+            }
+
+            var max = props.max
+            var min = props.min
+            var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
+            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>{
+                
+                var nn = crypto.getRandomValues(new Uint16Array(1))[0]%(3);
+                if (nn == 0) {
+                    return all_joyokanjis[n%all_joyokanjis.length];
+                }
+                else if (nn == 1) {
+                    return hiraganas[n%hiraganas.length];
+                }
+                else {
+                    return katakanas[n%katakanas.length];
+                }
+            }
+            ).join('');
             return ss;
         }
     },
@@ -796,7 +824,7 @@ window.onload = () => {
                         res = d.func(props);
                     }
                     // else if (d.type == "integer") {
-                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata"].includes(d.type)) {
+                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata", "mixjap"].includes(d.type)) {
                         let min = defaults.alpha_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.alpha_max;
@@ -943,7 +971,7 @@ window.onload = () => {
                         props["max"] = max;
                         // ss += d.func(max);
                     }
-                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata"].includes(d.type)) {
+                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata", "mixjap"].includes(d.type)) {
                         let min = defaults.alpha_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.alpha_max;
