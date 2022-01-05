@@ -9,8 +9,8 @@ const defaults = {
     word_min: 2,
     word_max: 10,
     max_word_max: 100,
-    para_max: 300,
-    max_para_max: 10000,
+    para_max: 2,
+    max_para_max: 10,
     alpha_min: 2,
     alpha_max: 6,
     max_alpha_max: 50,
@@ -121,7 +121,7 @@ const genTypes = [
             }
 
             var max = props.max
-            let min = 10;
+            // let min = 10;
             // var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ          .,.,.,'''";
             // // console.log("max", max);
             // var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
