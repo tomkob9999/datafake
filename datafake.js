@@ -834,7 +834,6 @@ window.onload = () => {
                         props["max"] = max;
                         // props = {min, max};
                         res = d.func(props);
-                        if ("" == res) res = null;
                     }
                     // else if (d.type == "integer") {
                     else if (["integer", "intzero"].includes(d.type)) {
