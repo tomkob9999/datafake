@@ -2,6 +2,7 @@
 
 This tool is to generate random "fake" test data.
 
+
 # Highlights
 - written in vanilla Javascript (thus, fast)
 - no server side processing
@@ -10,7 +11,9 @@ This tool is to generate random "fake" test data.
 - original Japanese name, address and text generation/conversion modules are included (these libraries are not light, but quite powerful)
 # Usage
 
-On desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, launch DataFake.html on the browser of your choice (typically double-clicking the file).  That is all.
+You can either access the internet site ( https://tomkob9999.github.io/datafake/ ) via Github Pages service, or download the source codes and run on your PC.
+
+When running on desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, launch index.html on the browser of your choice (typically double-clicking the file).  That is all.
 
 # Features
 - Dynamically add fields: done
