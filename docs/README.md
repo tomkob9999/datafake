@@ -11,9 +11,9 @@ This tool is to generate random "fake" test data.
 - original Japanese name, address and text generation/conversion modules are included (these libraries are not light, but quite powerful)
 # Usage
 
-You can either access the Github Pages site ( https://tomkob9999.github.io/datafake/ ), or download the source codes and run on your PC.
+You can access the Github Pages site directly ( https://tomkob9999.github.io/datafake/ ).
 
-When running on desktop (Windows/Mac/Linux/others), download the zip file and unzip.  Then, launch index.html on the browser of your choice (typically double-clicking the file).  That is all.
+Alternatively, you can download the source codes and run on your PC by downloading the zip file and unzipping.  Then, you can launch index.html on the browser of your choice (typically double-clicking the file).
 
 # Features
 - Dynamically add fields: done
