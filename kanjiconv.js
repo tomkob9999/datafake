@@ -3910,7 +3910,22 @@ const convKata2Hira = (str) => {
 };
 
 let all_kanjis = [];
-Object.keys(kanji_dict).forEach(function (key) {
-    if (!hirasganaset[key] && !katakanaset[key]) all_kanjis.push(key)
-});
-// console.log("all_kanjis", all_kanjis);
+let all_joyokanjis = [];
+{
+    let after_joyo = false;
+    const nonjoyo_begin = "啞";
+    Object.keys(kanji_dict).forEach((key) => {
+        if (!hirasganaset[key] && !katakanaset[key]) {
+
+            all_kanjis.push(key);
+            if (key == nonjoyo_begin) {
+                after_joyo = true;
+            }
+            if (!after_joyo) {
+                all_joyokanjis.push(key);
+            }
+        }
+    });
+    // console.log("all_kanjis", all_kanjis);
+    // console.log("all_joyokanjis", all_joyokanjis);
+}

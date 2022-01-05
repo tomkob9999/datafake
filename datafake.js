@@ -177,7 +177,7 @@ const genTypes = [
             return ss;
         }
     },
-    {value: "kanji", title: "Kanji", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
+    {value: "joyokanji", title: "Kanji (Only Joyo)", enable_min: true, enable_max: true, enable_blank: true, func: (props)=>{
             const blank_freq = props.blank_freq;
             if (blank_freq > 0) {
                 let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
@@ -188,7 +188,7 @@ const genTypes = [
             var max = props.max
             var min = props.min
             var N = crypto.getRandomValues(new Uint16Array(1))[0]%(max-min+1)+min;
-            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>all_kanjis[n%all_kanjis.length]).join('');
+            var ss = Array.from(crypto.getRandomValues(new Uint16Array(N))).map((n)=>all_joyokanjis[n%all_joyokanjis.length]).join('');
             return ss;
         }
     },
@@ -796,7 +796,7 @@ window.onload = () => {
                         res = d.func(props);
                     }
                     // else if (d.type == "integer") {
-                    else if (["alphaup", "alphalo", "kanji", "hira", "kata"].includes(d.type)) {
+                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata"].includes(d.type)) {
                         let min = defaults.alpha_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.alpha_max;
@@ -943,7 +943,7 @@ window.onload = () => {
                         props["max"] = max;
                         // ss += d.func(max);
                     }
-                    else if (["alphaup", "alphalo", "kanji", "hira", "kata"].includes(d.type)) {
+                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata"].includes(d.type)) {
                         let min = defaults.alpha_min;
                         if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
                         let max = defaults.alpha_max;
