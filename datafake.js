@@ -711,6 +711,10 @@ window.onload = () => {
     
     const btngen = document.querySelector("#btngen");
     btngen.addEventListener("click", () => {
+
+        // document.querySelector(".spinback").style.display ="flex";
+
+
         const fields = [];
         const table = document.querySelector(".table");
         // for (let row of table.rows) {
@@ -1073,6 +1077,9 @@ window.onload = () => {
         // console.log("locale is");
         // console.log(faker.locale);
         // console.log(outtext);
+
+        
+        // document.querySelector(".spinback").style.display ="none";
     })
 
     const btncopy = document.querySelector("#btncopy");
@@ -1092,4 +1099,5 @@ window.onload = () => {
         });
     });
 
+    document.querySelector(".spinback").style.display ="none";
 }
