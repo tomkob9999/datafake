@@ -594,7 +594,7 @@ var _locales = [];
 // console.log(_locales);
 
 window.onload = () => {
-    
+
     for(var locale in faker.locales) {
         _locales.push({ name: locale, title: faker.locales[locale].title})
     }
@@ -1069,6 +1069,15 @@ window.onload = () => {
         const ta1 = document.querySelector("#ta1");
         navigator.clipboard.writeText(ta1.value).then(e => {
           console.log('Copied');
+          
+          document.querySelectorAll('.toast')
+          .forEach(function (toastNode) {
+            var toast = new bootstrap.Toast(toastNode, {
+              autohide: true
+            })
+            toast.show()
+          })
         });
     });
+
 }
