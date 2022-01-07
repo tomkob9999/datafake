@@ -1058,6 +1058,15 @@ window.onload = () => {
             const str7 = outtext.join("\n");
             const ta1 = document.querySelector("#ta1");
             ta1.textContent = str7;
+
+            document.querySelector('.toast-body').textContent = "Output generated"
+            document.querySelectorAll('.toast')
+            .forEach(function (toastNode) {
+              var toast = new bootstrap.Toast(toastNode, {
+                autohide: true
+              })
+              toast.show()
+            })
         } 
         // console.log("locale is");
         // console.log(faker.locale);
@@ -1068,8 +1077,9 @@ window.onload = () => {
     btncopy.addEventListener("click", () => {
         const ta1 = document.querySelector("#ta1");
         navigator.clipboard.writeText(ta1.value).then(e => {
-          console.log('Copied');
+        //   console.log('Copied');
           
+          document.querySelector('.toast-body').textContent = "Copied to clipboard"
           document.querySelectorAll('.toast')
           .forEach(function (toastNode) {
             var toast = new bootstrap.Toast(toastNode, {
