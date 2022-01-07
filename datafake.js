@@ -1059,15 +1059,17 @@ window.onload = () => {
             const ta1 = document.querySelector("#ta1");
             ta1.textContent = str7;
 
-            document.querySelector('.toast-body').textContent = "Output generated"
-            document.querySelectorAll('.toast')
-            .forEach(function (toastNode) {
-              var toast = new bootstrap.Toast(toastNode, {
-                autohide: true
-              })
-              toast.show()
-            })
         } 
+
+        document.querySelector('.toast-body').textContent = "output generated"
+        document.querySelectorAll('.toast')
+        .forEach(function (toastNode) {
+          var toast = new bootstrap.Toast(toastNode, {
+            autohide: true
+          })
+          toast.show()
+        })
+
         // console.log("locale is");
         // console.log(faker.locale);
         // console.log(outtext);
@@ -1079,7 +1081,7 @@ window.onload = () => {
         navigator.clipboard.writeText(ta1.value).then(e => {
         //   console.log('Copied');
           
-          document.querySelector('.toast-body').textContent = "Copied to clipboard"
+          document.querySelector('.toast-body').textContent = "copied to clipboard"
           document.querySelectorAll('.toast')
           .forEach(function (toastNode) {
             var toast = new bootstrap.Toast(toastNode, {
