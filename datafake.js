@@ -711,14 +711,15 @@ window.onload = () => {
     
     const btngen = document.querySelector("#btngen");
     btngen.addEventListener("click", () => {
-        
-        document.querySelector(".spinback").style.display = "flex";
 
-        setTimeout(() => {
-            generateOutput();
-            document.querySelector(".spinback").style.display = "none";
-        }, 10);
-        
+        execWithSpinner(generateOutput);
+
+        // document.querySelector(".spinback").style.display = "flex";
+        // setTimeout(() => {
+        //     generateOutput();
+        //     setTimeout(() => (document.querySelector(".spinback").style.display = "none"), 10);
+        // }, 10);
+
     })
 
     const btncopy = document.querySelector("#btncopy");
@@ -1104,4 +1105,12 @@ const generateOutput = () => {
               })
               toast.show()
             })
+}
+
+const execWithSpinner = (func)=> {
+    document.querySelector(".spinback").style.display = "flex";
+    setTimeout(() => {
+        func();
+        setTimeout(() => (document.querySelector(".spinback").style.display = "none"), 10);
+    }, 10);
 }
