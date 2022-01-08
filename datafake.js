@@ -711,375 +711,14 @@ window.onload = () => {
     
     const btngen = document.querySelector("#btngen");
     btngen.addEventListener("click", () => {
-
-        // document.querySelector(".spinback").style.display ="flex";
-
-
-        const fields = [];
-        const table = document.querySelector(".table");
-        // for (let row of table.rows) {
-        //     fields.push({type: "xxx"})
-        //     for(let cell of row.cells){
-        //        console.log(cell.inner);
-        //     }
-        // }
-
-		for (var i=0, rowLen=table.rows.length; i<rowLen; i++) {
-            let obj = {}
-            if (i == 0) continue;
-			for (var j=0, colLen=table.rows[i].cells.length ; j<colLen; j++) {
-				var cell = table.rows[i].cells[j];
-                if (j == POS_NAME) {
-                    // console.log(cell.innerHTML);
-                    let text10 = cell.getElementsByTagName('input')[0];
-                    // console.log(text10.value);
-                    obj = {...obj, name: text10.value};
-                }
-                else if (j == POS_TYPE) {
-                    // console.log(cell.innerHTML);
-                    var sel3 = cell.getElementsByTagName('select')[0];
-                    // console.log(sel3.value);
-
-                    const func = genTypes.filter((d) => d.value == sel3.value)[0].func;
-                    obj = {...obj, type: sel3.value, func: func};
-                }
-                // else if (j == POS_LEN) {
-                //     // console.log(cell.innerHTML);
-                //     let text11 = cell.getElementsByTagName('input')[0];
-                //     // console.log(text11.value);
-                //     obj = {...obj, length: text11.value};
-                // }
-                else if (j == POS_MIN) {
-                    // console.log(cell.innerHTML);
-                    let text12 = cell.getElementsByTagName('input')[0];
-                    // console.log(text11.value);
-                    obj = {...obj, min: text12.value};
-                }
-                else if (j == POS_BLANK) {
-                    // console.log(cell.innerHTML);
-                    let text12 = cell.getElementsByTagName('input')[0];
-                    // console.log(text11.value);
-                    obj = {...obj, allow_blank: text12.checked};
-                }
-                else if (j == POS_MAX) {
-                    // console.log(cell.innerHTML);
-                    let text13 = cell.getElementsByTagName('input')[0];
-                    // console.log(text11.value);
-                    obj = {...obj, max: text13.value};
-                }
-			}
-            fields.push(obj);
-		}
-        // console.log(fields);
-        const sel11 = document.querySelector(".select1");
-        // console.log("sel11.value");
-        // console.log(sel11.value);
-        faker.locale = (sel11.value == "") ? "ja" : sel11.value;
-        // currentLocale = sel11.value;
-        // console.log("faker.locale");
-        // console.log(faker.locale);
-        let outtext = [];
-        let num_recs = defaults.num_recs;
-        const sss = document.querySelector("#num_recs").value;
-        if (sss != "" && !isNaN(sss)) {
-            num_recs = parseInt(sss);
-        }
-        if (num_recs > defaults.max_num_recs) num_recs = defaults.max_num_recs; 
-        // console.log("num_recs", num_recs);
-
-        const outputformat = document.querySelector(".select2").value;
         
-        // console.log("outputformat", outputformat);
-        let delim = ",";
+        document.querySelector(".spinback").style.display = "flex";
+
+        setTimeout(() => {
+            generateOutput();
+            document.querySelector(".spinback").style.display = "none";
+        }, 10);
         
-        if (outputformat == "json") {
-            const outjson = [];
-            let props = {};
-            for (let x=0; x<num_recs; x++) {
-                let fname = "";
-                let lname = "";
-                let fullname = "";
-                let state = "";
-                let city = "";
-
-                let jsonrec = {}
-                let ss = "";
-                fields.map((d, index) => {
-                    let res = null;
-                    // console.log(d.type);
-                    props["blank_freq"] = (d.allow_blank) ? defaults.blank_freq : 0;
-                    if (d.type == "word") {
-                        let min = defaults.word_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.word_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_word_max) max = defaults.max_word_max;
-                        props["min"] = min;
-                        props["max"] = max;
-                        // props = {min, max};
-                        res = d.func(props);
-                    }
-                    else if (d.type == "para") {
-                        let max = defaults.para_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_para_max) max = defaults.max_para_max;
-                        props["max"] = max;
-                        // props = {max};
-                        res = d.func(props);
-                    }
-                    // else if (d.type == "integer") {
-                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata", "mixjap"].includes(d.type)) {
-                        let min = defaults.alpha_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.alpha_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_alpha_max) max = defaults.max_alpha_max;
-                        props["min"] = min;
-                        props["max"] = max;
-                        // props = {min, max};
-                        res = d.func(props);
-                    }
-                    // else if (d.type == "integer") {
-                    else if (["integer", "intzero"].includes(d.type)) {
-                        let min = defaults.int_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.int_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_int_max) max = defaults.max_int_max;
-                        props["min"] = min;
-                        props["max"] = max;
-                        // props = {min, max};
-                        res = d.func(props);
-                        if ("" == res) res = null;
-                    }
-                    else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
-                        // console.log("yyyy");
-                        let min = defaults.year_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.year_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_year_max) max = defaults.max_year_max;
-                        props["min"] = min;
-                        props["max"] = max;
-                        // props = {min, max};
-                        res = d.func(props);
-                    }
-                    else if (d.type == "fname") {
-                        res = d.func(props);
-                        fname = res;
-                    }
-                    else if (["fname_hira", "fname_kata"].includes(d.type)) {
-                        // console.log("fname", fname);
-                        props["fname"] = fname;
-                        res = d.func(props);
-                    }
-                    else if (d.type == "lname") {
-                        res = d.func(props);
-                        lname = res;
-                    }
-                    // else if (d.type == "lname_hira") {
-                    else if (["lname_hira", "lname_kata"].includes(d.type)) {
-                        props["lname"] = lname;
-                        res = d.func(props);
-                    }
-                    else if (d.type == "fullname") {
-                        res = d.func(props);
-                        fullname = res;
-                    }
-                    else if (d.type == "state") {
-                        // console.log("state out", state);
-                        res = d.func(props);
-                        state = res;
-                    }
-                    else if (d.type == "city") {
-                        props["state"] = state;
-                        res = d.func(props);
-                        city = res;
-                    }
-                    else if (d.type == "street") {
-                        props["state"] = state;
-                        props["city"] = city;
-                        res = d.func(props);
-                        street = res;
-                    }
-                    // else if (d.type == "fullname_hira") {
-                    else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
-                        props["fullname"] = fullname;
-                        res = d.func(props);
-                    }
-                    // // else if (["city"].includes(d.type)) 
-                    // else if (["city"].includes(d.type)) {
-                    //     props["state"] = state;
-                    //     console.log("state in", state);
-                    //     res = d.func(props);
-                    // }
-                    // else if (["street"].includes(d.type)) {
-                    //     props["state"] = state;
-                    //     props["city"] = city;
-                    //     res = d.func(props);
-                    // }
-                    else {
-                        res = d.func(props);
-                    }
-                    // else {
-                    jsonrec[fields[index].name] = res;
-                    // }
-                })
-                outjson.push(jsonrec);
-            }
-            const ta1 = document.querySelector("#ta1");
-            ta1.textContent = JSON.stringify(outjson, null, "\t");
-        } else {
-            
-            let props = {};
-            if (outputformat == "tsv") 
-            delim = "\t";
-            let ss = "";
-            fields.map((d, index) => {
-                if (index > 0) ss += delim;
-                // console.log(d.type);
-                // console.log(d.func());
-                ss += d.name;
-            })
-            outtext.push(ss);
-            for (let x=0; x<num_recs; x++) {
-                ss = "";
-                let fname = "";
-                let lname = "";
-                let fullname = "";
-                let state = "";
-                let city = "";
-                fields.map((d, index) => {
-                    if (index > 0) ss += delim;
-                    // console.log(d.type);
-                    // console.log(d.func());
-                    props["blank_freq"] = (d.allow_blank) ? defaults.blank_freq : 0;
-                    if (d.type == "word") {
-                        let min = defaults.word_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.word_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_word_max) max = defaults.max_word_max;
-                        // props = {min, max};
-                        props["min"] = min;
-                        props["max"] = max;
-                        // ss += d.func(min, max);
-                    }
-                    else if (d.type == "para") {
-                        let max = defaults.para_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_para_max) max = defaults.max_para_max;
-                        // props = {max};
-                        // props["min"] = min;
-                        props["max"] = max;
-                        // ss += d.func(max);
-                    }
-                    else if (["alphaup", "alphalo", "joyokanji", "hira", "kata", "mixjap"].includes(d.type)) {
-                        let min = defaults.alpha_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.alpha_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_alpha_max) max = defaults.max_alpha_max;
-                        // props = {min, max};
-                        props["min"] = min;
-                        props["max"] = max;
-                        // ss += d.func(min, max);
-                    }
-                    else if (["integer", "intzero"].includes(d.type)) {
-                        let min = defaults.int_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.int_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_int_max) max = defaults.max_int_max;
-                        // props = {min, max};
-                        props["min"] = min;
-                        props["max"] = max;
-                        // ss += d.func(min, max);
-                    }
-                    else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
-                        // console.log("yyyymmdd IN");
-                        let min = defaults.year_min;
-                        if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
-                        let max = defaults.year_max;
-                        if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
-                        if (max > defaults.max_year_max) max = defaults.max_year_max;
-                        
-                        props["min"] = min;
-                        props["max"] = max;
-                        // props = {min, max};
-                        // ss += d.func(min, max);
-                    }
-                    else if (["fname_hira", "fname_kata"].includes(d.type)) {
-                        // console.log("fname", fname);
-                        props["fname"] = fname;
-                    }
-                    else if (["lname_hira", "lname_kata"].includes(d.type)) {
-                    // else if (d.type == "lname_hira") {
-                        // console.log("fname", fname);
-                        props["lname"] = lname;
-                    }
-                    // else if (d.type == "fullname_hira") {
-                    else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
-                        // console.log("fname", fname);
-                        props["fullname"] = fullname;
-                    }
-                    // else if (["city"].includes(d.type)) {
-                    else if (d.type == "city") {
-                        // console.log("fname", fname);
-                        props["state"] = state;
-                    }
-                    // else if (["street"].includes(d.type)) {
-                    else if (d.type == "street") {
-                        // console.log("fname", fname);
-                        props["city"] = state;
-                    }
-                    // else {
-                    // console.log("d.allow_blank", d.allow_blank);
-                    // console.log("props.blank_freq", props["blank_freq"]);
-                    
-                    let sss = d.func(props);
-
-                    if (d.type == "fname") {
-                        fname = sss;
-                    }
-                    else if (d.type == "lname") {
-                        lname = sss;
-                    }
-                    else if (d.type == "fullname") {
-                        fullname = sss;
-                    }
-                    else if (d.type == "state") {
-                        state = sss;
-                    }
-                    else if (d.type == "city") {
-                        city = sss;
-                    }
-                    ss += sss;
-                    // }
-                })
-                outtext.push(ss);
-            }
-            const str7 = outtext.join("\n");
-            const ta1 = document.querySelector("#ta1");
-            ta1.textContent = str7;
-
-        } 
-
-        document.querySelector('.toast-body').textContent = "output generated"
-        document.querySelectorAll('.toast')
-        .forEach(function (toastNode) {
-          var toast = new bootstrap.Toast(toastNode, {
-            autohide: true
-          })
-          toast.show()
-        })
-
-        // console.log("locale is");
-        // console.log(faker.locale);
-        // console.log(outtext);
-
-        
-        // document.querySelector(".spinback").style.display ="none";
     })
 
     const btncopy = document.querySelector("#btncopy");
@@ -1100,4 +739,369 @@ window.onload = () => {
     });
 
     document.querySelector(".spinback").style.display ="none";
+}
+
+
+const generateOutput = () => {
+            // document.querySelector(".spinback").style.display ="flex";
+
+
+            const fields = [];
+            const table = document.querySelector(".table");
+            // for (let row of table.rows) {
+            //     fields.push({type: "xxx"})
+            //     for(let cell of row.cells){
+            //        console.log(cell.inner);
+            //     }
+            // }
+    
+            for (var i=0, rowLen=table.rows.length; i<rowLen; i++) {
+                let obj = {}
+                if (i == 0) continue;
+                for (var j=0, colLen=table.rows[i].cells.length ; j<colLen; j++) {
+                    var cell = table.rows[i].cells[j];
+                    if (j == POS_NAME) {
+                        // console.log(cell.innerHTML);
+                        let text10 = cell.getElementsByTagName('input')[0];
+                        // console.log(text10.value);
+                        obj = {...obj, name: text10.value};
+                    }
+                    else if (j == POS_TYPE) {
+                        // console.log(cell.innerHTML);
+                        var sel3 = cell.getElementsByTagName('select')[0];
+                        // console.log(sel3.value);
+    
+                        const func = genTypes.filter((d) => d.value == sel3.value)[0].func;
+                        obj = {...obj, type: sel3.value, func: func};
+                    }
+                    // else if (j == POS_LEN) {
+                    //     // console.log(cell.innerHTML);
+                    //     let text11 = cell.getElementsByTagName('input')[0];
+                    //     // console.log(text11.value);
+                    //     obj = {...obj, length: text11.value};
+                    // }
+                    else if (j == POS_MIN) {
+                        // console.log(cell.innerHTML);
+                        let text12 = cell.getElementsByTagName('input')[0];
+                        // console.log(text11.value);
+                        obj = {...obj, min: text12.value};
+                    }
+                    else if (j == POS_BLANK) {
+                        // console.log(cell.innerHTML);
+                        let text12 = cell.getElementsByTagName('input')[0];
+                        // console.log(text11.value);
+                        obj = {...obj, allow_blank: text12.checked};
+                    }
+                    else if (j == POS_MAX) {
+                        // console.log(cell.innerHTML);
+                        let text13 = cell.getElementsByTagName('input')[0];
+                        // console.log(text11.value);
+                        obj = {...obj, max: text13.value};
+                    }
+                }
+                fields.push(obj);
+            }
+            // console.log(fields);
+            const sel11 = document.querySelector(".select1");
+            // console.log("sel11.value");
+            // console.log(sel11.value);
+            faker.locale = (sel11.value == "") ? "ja" : sel11.value;
+            // currentLocale = sel11.value;
+            // console.log("faker.locale");
+            // console.log(faker.locale);
+            let outtext = [];
+            let num_recs = defaults.num_recs;
+            const sss = document.querySelector("#num_recs").value;
+            if (sss != "" && !isNaN(sss)) {
+                num_recs = parseInt(sss);
+            }
+            if (num_recs > defaults.max_num_recs) num_recs = defaults.max_num_recs; 
+            // console.log("num_recs", num_recs);
+    
+            const outputformat = document.querySelector(".select2").value;
+            
+            // console.log("outputformat", outputformat);
+            let delim = ",";
+            
+            if (outputformat == "json") {
+                const outjson = [];
+                let props = {};
+                for (let x=0; x<num_recs; x++) {
+                    let fname = "";
+                    let lname = "";
+                    let fullname = "";
+                    let state = "";
+                    let city = "";
+    
+                    let jsonrec = {}
+                    let ss = "";
+                    fields.map((d, index) => {
+                        let res = null;
+                        // console.log(d.type);
+                        props["blank_freq"] = (d.allow_blank) ? defaults.blank_freq : 0;
+                        if (d.type == "word") {
+                            let min = defaults.word_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.word_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_word_max) max = defaults.max_word_max;
+                            props["min"] = min;
+                            props["max"] = max;
+                            // props = {min, max};
+                            res = d.func(props);
+                        }
+                        else if (d.type == "para") {
+                            let max = defaults.para_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_para_max) max = defaults.max_para_max;
+                            props["max"] = max;
+                            // props = {max};
+                            res = d.func(props);
+                        }
+                        // else if (d.type == "integer") {
+                        else if (["alphaup", "alphalo", "joyokanji", "hira", "kata", "mixjap"].includes(d.type)) {
+                            let min = defaults.alpha_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.alpha_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_alpha_max) max = defaults.max_alpha_max;
+                            props["min"] = min;
+                            props["max"] = max;
+                            // props = {min, max};
+                            res = d.func(props);
+                        }
+                        // else if (d.type == "integer") {
+                        else if (["integer", "intzero"].includes(d.type)) {
+                            let min = defaults.int_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.int_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_int_max) max = defaults.max_int_max;
+                            props["min"] = min;
+                            props["max"] = max;
+                            // props = {min, max};
+                            res = d.func(props);
+                            if ("" == res) res = null;
+                        }
+                        else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
+                            // console.log("yyyy");
+                            let min = defaults.year_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.year_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_year_max) max = defaults.max_year_max;
+                            props["min"] = min;
+                            props["max"] = max;
+                            // props = {min, max};
+                            res = d.func(props);
+                        }
+                        else if (d.type == "fname") {
+                            res = d.func(props);
+                            fname = res;
+                        }
+                        else if (["fname_hira", "fname_kata"].includes(d.type)) {
+                            // console.log("fname", fname);
+                            props["fname"] = fname;
+                            res = d.func(props);
+                        }
+                        else if (d.type == "lname") {
+                            res = d.func(props);
+                            lname = res;
+                        }
+                        // else if (d.type == "lname_hira") {
+                        else if (["lname_hira", "lname_kata"].includes(d.type)) {
+                            props["lname"] = lname;
+                            res = d.func(props);
+                        }
+                        else if (d.type == "fullname") {
+                            res = d.func(props);
+                            fullname = res;
+                        }
+                        else if (d.type == "state") {
+                            // console.log("state out", state);
+                            res = d.func(props);
+                            state = res;
+                        }
+                        else if (d.type == "city") {
+                            props["state"] = state;
+                            res = d.func(props);
+                            city = res;
+                        }
+                        else if (d.type == "street") {
+                            props["state"] = state;
+                            props["city"] = city;
+                            res = d.func(props);
+                            street = res;
+                        }
+                        // else if (d.type == "fullname_hira") {
+                        else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
+                            props["fullname"] = fullname;
+                            res = d.func(props);
+                        }
+                        // // else if (["city"].includes(d.type)) 
+                        // else if (["city"].includes(d.type)) {
+                        //     props["state"] = state;
+                        //     console.log("state in", state);
+                        //     res = d.func(props);
+                        // }
+                        // else if (["street"].includes(d.type)) {
+                        //     props["state"] = state;
+                        //     props["city"] = city;
+                        //     res = d.func(props);
+                        // }
+                        else {
+                            res = d.func(props);
+                        }
+                        // else {
+                        jsonrec[fields[index].name] = res;
+                        // }
+                    })
+                    outjson.push(jsonrec);
+                }
+                const ta1 = document.querySelector("#ta1");
+                ta1.textContent = JSON.stringify(outjson, null, "\t");
+            } else {
+                
+                let props = {};
+                if (outputformat == "tsv") 
+                delim = "\t";
+                let ss = "";
+                fields.map((d, index) => {
+                    if (index > 0) ss += delim;
+                    // console.log(d.type);
+                    // console.log(d.func());
+                    ss += d.name;
+                })
+                outtext.push(ss);
+                for (let x=0; x<num_recs; x++) {
+                    ss = "";
+                    let fname = "";
+                    let lname = "";
+                    let fullname = "";
+                    let state = "";
+                    let city = "";
+                    fields.map((d, index) => {
+                        if (index > 0) ss += delim;
+                        // console.log(d.type);
+                        // console.log(d.func());
+                        props["blank_freq"] = (d.allow_blank) ? defaults.blank_freq : 0;
+                        if (d.type == "word") {
+                            let min = defaults.word_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.word_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_word_max) max = defaults.max_word_max;
+                            // props = {min, max};
+                            props["min"] = min;
+                            props["max"] = max;
+                            // ss += d.func(min, max);
+                        }
+                        else if (d.type == "para") {
+                            let max = defaults.para_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_para_max) max = defaults.max_para_max;
+                            // props = {max};
+                            // props["min"] = min;
+                            props["max"] = max;
+                            // ss += d.func(max);
+                        }
+                        else if (["alphaup", "alphalo", "joyokanji", "hira", "kata", "mixjap"].includes(d.type)) {
+                            let min = defaults.alpha_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.alpha_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_alpha_max) max = defaults.max_alpha_max;
+                            // props = {min, max};
+                            props["min"] = min;
+                            props["max"] = max;
+                            // ss += d.func(min, max);
+                        }
+                        else if (["integer", "intzero"].includes(d.type)) {
+                            let min = defaults.int_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.int_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_int_max) max = defaults.max_int_max;
+                            // props = {min, max};
+                            props["min"] = min;
+                            props["max"] = max;
+                            // ss += d.func(min, max);
+                        }
+                        else if (["yyyymmdd", "yyyy/mm/dd", "yyyy-mm-dd"].includes(d.type)) {
+                            // console.log("yyyymmdd IN");
+                            let min = defaults.year_min;
+                            if (d.min != "" && !isNaN(d.min)) min = parseInt(d.min);
+                            let max = defaults.year_max;
+                            if (d.max != "" && !isNaN(d.max)) max = parseInt(d.max);
+                            if (max > defaults.max_year_max) max = defaults.max_year_max;
+                            
+                            props["min"] = min;
+                            props["max"] = max;
+                            // props = {min, max};
+                            // ss += d.func(min, max);
+                        }
+                        else if (["fname_hira", "fname_kata"].includes(d.type)) {
+                            // console.log("fname", fname);
+                            props["fname"] = fname;
+                        }
+                        else if (["lname_hira", "lname_kata"].includes(d.type)) {
+                        // else if (d.type == "lname_hira") {
+                            // console.log("fname", fname);
+                            props["lname"] = lname;
+                        }
+                        // else if (d.type == "fullname_hira") {
+                        else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
+                            // console.log("fname", fname);
+                            props["fullname"] = fullname;
+                        }
+                        // else if (["city"].includes(d.type)) {
+                        else if (d.type == "city") {
+                            // console.log("fname", fname);
+                            props["state"] = state;
+                        }
+                        // else if (["street"].includes(d.type)) {
+                        else if (d.type == "street") {
+                            // console.log("fname", fname);
+                            props["city"] = state;
+                        }
+                        // else {
+                        // console.log("d.allow_blank", d.allow_blank);
+                        // console.log("props.blank_freq", props["blank_freq"]);
+                        
+                        let sss = d.func(props);
+    
+                        if (d.type == "fname") {
+                            fname = sss;
+                        }
+                        else if (d.type == "lname") {
+                            lname = sss;
+                        }
+                        else if (d.type == "fullname") {
+                            fullname = sss;
+                        }
+                        else if (d.type == "state") {
+                            state = sss;
+                        }
+                        else if (d.type == "city") {
+                            city = sss;
+                        }
+                        ss += sss;
+                        // }
+                    })
+                    outtext.push(ss);
+                }
+                const str7 = outtext.join("\n");
+                const ta1 = document.querySelector("#ta1");
+                ta1.textContent = str7;
+    
+            } 
+    
+            document.querySelector('.toast-body').textContent = "output generated"
+            document.querySelectorAll('.toast')
+            .forEach(function (toastNode) {
+              var toast = new bootstrap.Toast(toastNode, {
+                autohide: true
+              })
+              toast.show()
+            })
 }

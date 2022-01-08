@@ -33,5 +33,6 @@ Alternatively, you can download the source codes and run on your PC by downloadi
 - support katakana/katakana Names automatically translated from kanji name: done
 - flash copy success message LOW PRIORITY: done
 - street address is messed up: done
+- show spinner during output generation: done
 
 - Allow decimal point and precision: OPEN
