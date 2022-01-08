@@ -712,7 +712,7 @@ window.onload = () => {
     const btngen = document.querySelector("#btngen");
     btngen.addEventListener("click", () => {
 
-        execWithSpinner(generateOutput);
+        execWithSpinner(generateOutput, []);
 
         // document.querySelector(".spinback").style.display = "flex";
         // setTimeout(() => {
@@ -1107,10 +1107,10 @@ const generateOutput = () => {
             })
 }
 
-const execWithSpinner = (func)=> {
+const execWithSpinner = (func, propArray)=> {
     document.querySelector(".spinback").style.display = "flex";
     setTimeout(() => {
-        func();
+        func(propArray);
         setTimeout(() => (document.querySelector(".spinback").style.display = "none"), 10);
     }, 10);
 }
