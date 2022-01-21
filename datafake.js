@@ -379,6 +379,19 @@ const genTypes = [
         }
         return convHira2Kata(convKanjiToKunyomi(props.fname));
     }},
+    {value: "fname_hankata", title: "First Name - Hankaku Kata", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("fname" in props) || props.fname == "") {
+            // return "ワカワカ"
+            return "";
+        }
+        return convZenKata2HanKata(convHira2Kata(convKanjiToKunyomi(props.fname)));
+    }},
     {value: "lname", title: "Last Name", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
         if (blank_freq > 0) {
@@ -416,6 +429,19 @@ const genTypes = [
             return "";
         }
         return convHira2Kata(convKanjiToKunyomi(props.lname));
+    }},
+    {value: "lname_hankata", title: "Last Name - Hankaku Kata", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("lname" in props) || props.lname == "") {
+            // return "ワカワカ"
+            return "";
+        }
+        return convZenKata2HanKata(convHira2Kata(convKanjiToKunyomi(props.lname)));
     }},
     {value: "fullname", title: "Full Name", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -460,6 +486,19 @@ const genTypes = [
             return "";
         }
         return convHira2Kata(convKanjiToKunyomi(props.fullname));
+    }},
+    {value: "fullname_hankata", title: "Full Name - Hankaku Kata", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
+        const blank_freq = props.blank_freq;
+        if (blank_freq > 0) {
+            let n1 = crypto.getRandomValues(new Uint16Array(1))[0]%(blank_freq);
+            if (n1 == 0) return "";
+        }
+        // console.log("props", props);
+        if (!("fullname" in props) || props.fullname == "") {
+            // return "ワカワカ ワカワカ"
+            return "";
+        }
+        return convZenKata2HanKata(convHira2Kata(convKanjiToKunyomi(props.fullname)));
     }},
     {value: "dob", title: "Date of Birth", enable_min: false, enable_max: false, enable_blank: true, func: (props)=>{
         const blank_freq = props.blank_freq;
@@ -900,7 +939,7 @@ const generateOutput = () => {
                             res = d.func(props);
                             fname = res;
                         }
-                        else if (["fname_hira", "fname_kata"].includes(d.type)) {
+                        else if (["fname_hira", "fname_kata", "fname_hankata"].includes(d.type)) {
                             // console.log("fname", fname);
                             props["fname"] = fname;
                             res = d.func(props);
@@ -910,7 +949,7 @@ const generateOutput = () => {
                             lname = res;
                         }
                         // else if (d.type == "lname_hira") {
-                        else if (["lname_hira", "lname_kata"].includes(d.type)) {
+                        else if (["lname_hira", "lname_kata", "lname_hankata"].includes(d.type)) {
                             props["lname"] = lname;
                             res = d.func(props);
                         }
@@ -935,7 +974,7 @@ const generateOutput = () => {
                             street = res;
                         }
                         // else if (d.type == "fullname_hira") {
-                        else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
+                        else if (["fullname_hira", "fullname_kata", "fullname_hankata"].includes(d.type)) {
                             props["fullname"] = fullname;
                             res = d.func(props);
                         }
@@ -1041,17 +1080,17 @@ const generateOutput = () => {
                             // props = {min, max};
                             // ss += d.func(min, max);
                         }
-                        else if (["fname_hira", "fname_kata"].includes(d.type)) {
+                        else if (["fname_hira", "fname_kata", "fname_hankata"].includes(d.type)) {
                             // console.log("fname", fname);
                             props["fname"] = fname;
                         }
-                        else if (["lname_hira", "lname_kata"].includes(d.type)) {
+                        else if (["lname_hira", "lname_kata", "lname_hankata"].includes(d.type)) {
                         // else if (d.type == "lname_hira") {
                             // console.log("fname", fname);
                             props["lname"] = lname;
                         }
                         // else if (d.type == "fullname_hira") {
-                        else if (["fullname_hira", "fullname_kata"].includes(d.type)) {
+                        else if (["fullname_hira", "fullname_kata", "fullname_hankata"].includes(d.type)) {
                             // console.log("fname", fname);
                             props["fullname"] = fullname;
                         }
